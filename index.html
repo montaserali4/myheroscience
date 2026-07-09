@@ -125,7 +125,8 @@
         .memory-card { aspect-ratio: 1; border-radius: 16px; cursor: pointer; transition: all 0.3s; border: none; display: flex; align-items: center; justify-content: center; font-size: 32px; position: relative; }
         .memory-card.hidden { background: linear-gradient(135deg, #3b82f6, #1e40af); }
         .memory-card.hidden::after { content: "❓"; font-size: 28px; }
-        .memory-card.hidden .memory-content { display: none; }
+        .memory-card.hidden .memory-content { display: none !important; }
+        .memory-card.revealed .memory-content { display: block; }
         .memory-card.revealed { background: white; border: 2px solid #e2e8f0; transform: rotateY(180deg); }
         .memory-card.matched { background: #dcfce7; border: 2px solid #22c55e; animation: matchPulse 0.5s; }
         @keyframes matchPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
@@ -773,6 +774,51 @@ const vocabData = {
   ]
 };
 
+// Word to Emoji mapping for games
+const wordEmojis = {
+  "Seed":"🌱","Root":"🥕","Stem":"🌿","Leaf":"🍃","Flower":"🌸",
+  "Fruit":"🍎","Tree":"🌳","Branch":"🌲","Petal":"🌺","Soil":"🪨",
+  "Water":"💧","Sunlight":"☀️","Photosynthesis":"🌞","Chlorophyll":"🟢",
+  "Bud":"🌷","Pollen":"🐝","Sprout":"🌾","Garden":"🏡","Grass":"🌾",
+  "Bush":"🌳","Thorn":"🌵","Vine":"🍇","Cactus":"🌵","Fern":"🌿",
+  "Moss":"🍀","Bark":"🪵","Sap":"🍯","Seedling":"🌱","Prune":"✂️",
+  "Pollinate":"🦋","Evergreen":"🌲","Deciduous":"🍂","Germinate":"🌱",
+  "Nutrient":"💊","Drought":"🏜️","Harvest":"🌾","Fertilizer":"💩",
+  "Compost":"🍂","Greenhouse":"🏠","Herb":"🌿","Shrub":"🌳",
+  "Root system":"🥕","Oxygen":"💨","Carbon Dioxide":"🏭","Ecosystem":"🌍",
+  "Biome":"🌎","Tropism":"🌻","Xylem":"💧","Phloem":"🌿","Erosion":"🏔️",
+  "Lion":"🦁","Elephant":"🐘","Tiger":"🐅","Giraffe":"🦒","Zebra":"🦓",
+  "Monkey":"🐒","Penguin":"🐧","Dolphin":"🐬","Eagle":"🦅","Bear":"🐻",
+  "Shark":"🦈","Snake":"🐍","Frog":"🐸","Butterfly":"🦋","Bee":"🐝",
+  "Ant":"🐜","Spider":"🕷️","Horse":"🐴","Camel":"🐪","Kangaroo":"🦘",
+  "Owl":"🦉","Whale":"🐋","Turtle":"🐢","Fox":"🦊","Wolf":"🐺",
+  "Cheetah":"🐆","Gorilla":"🦍","Crocodile":"🐊","Deer":"🦌","Bat":"🦇",
+  "Peacock":"🦚","Squirrel":"🐿️","Octopus":"🐙","Jellyfish":"🪼","Flamingo":"🦩",
+  "Koala":"🐨","Panda":"🐼","Rhino":"🦏","Seal":"🦭","Parrot":"🦜",
+  "Hedgehog":"🦔","Otter":"🦦","Platypus":"🦫","Armadillo":"🦔","Chameleon":"🦎",
+  "Sloth":"🦥","Hippo":"🦛","Mantis":"🦗","Beetle":"🪲","Reindeer":"🦌",
+  "Earth":"🌍","Sun":"☀️","Moon":"🌙","Star":"⭐","Planet":"🪐",
+  "Galaxy":"🌌","Comet":"☄️","Asteroid":"🌑","Meteor":"🌠","Solar System":"🌞",
+  "Orbit":"🔄","Eclipse":"🌑","Gravity":"🍎","Atmosphere":"🌤️","Volcano":"🌋",
+  "Earthquake":"🫨","Ocean":"🌊","Mountain":"⛰️","Desert":"🏜️","Rainforest":"🌳",
+  "River":"🏞️","Lake":"🏖️","Glacier":"🧊","Tornado":"🌪️","Tsunami":"🌊",
+  "Hurricane":"🌀","Fossil":"🦴","Lava":"🌋","Crust":"🥧","Core":"🔥",
+  "Mars":"🔴","Jupiter":"🟠","Saturn":"🪐","Venus":"🌟","Mercury":"☿",
+  "Neptune":"🔵","Uranus":"🩵","Pluto":"🌑","Black Hole":"⚫","Nebula":"🌌",
+  "Supernova":"💥","Constellation":"✨","Equator":"🌐","Season":"🍂","Tides":"🌊",
+  "Magma":"🌋","Tsunami Wave":"🌊","Space Station":"🛰️","Rover":"🤖","Big Bang":"💥",
+  "Brain":"🧠","Heart":"❤️","Lung":"🫁","Stomach":"🫃","Liver":"🫀",
+  "Kidney":"🫘","Bone":"🦴","Muscle":"💪","Blood":"🩸","Skin":"🧴",
+  "Eye":"👁️","Ear":"👂","Nose":"👃","Tongue":"👅","Tooth":"🦷",
+  "Hair":"💇","Nail":"💅","Skeleton":"🦴","Rib":"🩻","Skull":"💀",
+  "Spine":"🦴","Vein":"🩸","Artery":"🫀","Nerve":"⚡","Cell":"🔬",
+  "DNA":"🧬","Hormone":"💊","Enzyme":"⚗️","Immune System":"🛡️","White Blood Cell":"⚪",
+  "Red Blood Cell":"🔴","Platelet":"🟣","Pancreas":"🫀","Spleen":"🫀","Intestine":"🌀",
+  "Esophagus":"🫴","Trachea":"🫁","Diaphragm":"🫁","Retina":"👁️","Pupil":"👁️",
+  "Cochlea":"👂","Cartilage":"🦴","Tendon":"💪","Joint":"🦴","Chromosome":"🧬",
+  "Neuron":"🧠","Synapse":"⚡","Antibody":"🛡️","Reflex":"👋","Metabolism":"⚡"
+};
+
 const worldConfig = {
   plants: { title: "Plants World", subtitle: "Plants World", color: "#22c55e", bgColor: "#f0fdf4", borderColor: "#bbf7d0", icon: "🌿" },
   animals: { title: "Animals World", subtitle: "Animals World", color: "#f97316", bgColor: "#fff7ed", borderColor: "#fed7aa", icon: "🦁" },
@@ -940,7 +986,7 @@ function showFact() {
 // ==================== QUIZ GAME ====================
 
 function generateQuizOptions(word, allWords) {
-  const correct = word.ar;
+  const correct = wordEmojis[word.en] || "❓";
   const distractors = [];
   const used = new Set([currentIndex]);
 
@@ -948,7 +994,7 @@ function generateQuizOptions(word, allWords) {
     const idx = Math.floor(Math.random() * allWords.length);
     if (!used.has(idx)) {
       used.add(idx);
-      distractors.push(allWords[idx].ar);
+      distractors.push(wordEmojis[allWords[idx].en] || "❓");
     }
   }
 
@@ -961,11 +1007,11 @@ function renderQuiz(containerId, resultId, questionId) {
   const allWords = vocabData[currentWorld];
   const quiz = generateQuizOptions(word, allWords);
 
-  document.getElementById(questionId).textContent = `What is the meaning of "${word.en}"?`;
+  document.getElementById(questionId).textContent = `Which picture matches "${word.en}"?`;
 
   let html = '';
   quiz.options.forEach((opt, i) => {
-    html += `<button class="quiz-option" id="${containerId}Opt${i}" onclick="selectQuizAnswer('${containerId}', ${i}, ${quiz.correctIndex}, '${resultId}')">${opt}</button>`;
+    html += `<button class="quiz-option" id="${containerId}Opt${i}" onclick="selectQuizAnswer('${containerId}', ${i}, ${quiz.correctIndex}, '${resultId}')" style="font-size:48px;text-align:center">${opt}</button>`;
   });
   document.getElementById(containerId).innerHTML = html;
   document.getElementById(resultId).innerHTML = '';
@@ -1005,23 +1051,27 @@ function awardStar() {
 // ==================== MEMORY GAME ====================
 
 function generateMemoryGame(word, allWords) {
-  // Create pairs: word -> emoji/icon representation
   const pairs = [];
+  let pairId = 0;
 
-  // Main word pair
-  pairs.push({ id: 0, text: word.en, type: 'word' });
-  pairs.push({ id: 0, text: word.ar, type: 'meaning' });
+  // Main word pair (two identical emojis)
+  const mainEmoji = wordEmojis[word.en] || "❓";
+  pairs.push({ id: pairId, text: mainEmoji });
+  pairs.push({ id: pairId, text: mainEmoji });
+  pairId++;
 
-  // Add 3 more random word pairs from same world
+  // Add more random word pairs from same world (two identical emojis)
   const used = new Set([currentIndex]);
   let attempts = 0;
 
-  while (pairs.length < 16 && attempts < 100) {
+  while (pairs.length < 16 && attempts < 300) {
     const idx = Math.floor(Math.random() * allWords.length);
-    if (!used.has(idx) && allWords[idx].en.length <= 12) {
+    if (!used.has(idx)) {
       used.add(idx);
-      pairs.push({ id: pairs.length / 2, text: allWords[idx].en, type: 'word' });
-      pairs.push({ id: pairs.length / 2, text: allWords[idx].ar, type: 'meaning' });
+      const emoji = wordEmojis[allWords[idx].en] || "❓";
+      pairs.push({ id: pairId, text: emoji });
+      pairs.push({ id: pairId, text: emoji });
+      pairId++;
     }
     attempts++;
   }
@@ -1043,7 +1093,7 @@ function renderMemoryGame(gridId, statsId, resultId, isModal) {
   let html = '';
   cards.forEach((card, i) => {
     html += `<button class="memory-card hidden" id="memCard${isModal ? 'Modal' : ''}${i}" onclick="flipMemoryCard(${i}, '${isModal}')">
-      <span class="memory-content">${card.text}</span>
+      <span class="memory-content" style="font-size:56px">${card.text}</span>
     </button>`;
   });
   document.getElementById(gridId).innerHTML = html;
