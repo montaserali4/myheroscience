@@ -112,6 +112,37 @@
         @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
         .quiz-result { margin-top: 16px; padding: 16px; border-radius: 16px; text-align: center; font-weight: 700; font-size: 18px; }
 
+        /* Game Styles */
+        .game-container { padding: 20px; }
+        .game-drop-zone { min-height: 80px; border: 3px dashed #cbd5e1; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 10px 0; padding: 16px; background: #f8fafc; transition: all 0.3s; }
+        .game-drop-zone.drag-over { border-color: #3b82f6; background: #eff6ff; }
+        .game-drop-zone.correct { border-color: #22c55e; background: #f0fdf4; }
+        .game-drop-zone.wrong { border-color: #ef4444; background: #fef2f2; animation: shake 0.5s; }
+        .game-draggable { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 50px; background: white; border: 2px solid #e2e8f0; cursor: grab; font-weight: 700; margin: 5px; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .game-draggable:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        .game-draggable.dragging { opacity: 0.5; cursor: grabbing; }
+        .game-score { text-align: center; font-size: 24px; font-weight: 900; margin-bottom: 20px; }
+        .game-targets { display: grid; gap: 12px; margin: 20px 0; }
+        .game-target-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #f1f5f9; border-radius: 12px; }
+        .game-target-label { font-weight: 700; min-width: 120px; }
+        .game-target-slot { flex: 1; min-height: 50px; border: 2px dashed #cbd5e1; border-radius: 12px; display: flex; align-items: center; justify-content: center; background: white; }
+        .game-target-slot.filled { border-style: solid; border-color: #22c55e; background: #f0fdf4; }
+        .game-pieces { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px 0; padding: 16px; background: #f8fafc; border-radius: 16px; }
+
+        /* Word Detail Page (for QR) */
+        .word-detail-page { display: none; min-height: 100vh; padding-top: 80px; padding-bottom: 40px; }
+        .word-detail-page.active { display: block; }
+        .word-detail-card { max-width: 600px; margin: 0 auto; background: white; border-radius: 32px; padding: 48px 32px; border: 2px solid; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+        .word-detail-english { font-size: 64px; font-weight: 900; color: #1e293b; margin-bottom: 12px; }
+        .word-detail-phonetic { font-size: 24px; color: #94a3b8; font-family: monospace; margin-bottom: 24px; }
+        .word-detail-arabic { font-size: 36px; font-weight: 800; padding: 20px 32px; border-radius: 20px; margin: 24px 0; }
+        .word-detail-fact { background: #f0f9ff; border-radius: 16px; padding: 20px; margin: 24px 0; text-align: left; }
+        .word-detail-fact-title { font-weight: 800; color: #0369a1; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .word-detail-fact-text { color: #475569; line-height: 1.6; }
+        .word-detail-qr-info { background: #fef3c7; border-radius: 16px; padding: 16px; margin-top: 24px; text-align: center; }
+        .word-detail-qr-info p { color: #92400e; font-size: 14px; }
+        .word-detail-nav { display: flex; justify-content: center; gap: 12px; margin-top: 24px; }
+
         /* Footer */
         .footer { background: #0f172a; color: white; padding: 60px 20px 30px; }
         .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
@@ -129,10 +160,13 @@
             .hero-title { font-size: 36px; }
             .hero-subtitle { font-size: 24px; }
             .word-english { font-size: 40px; }
+            .word-detail-english { font-size: 48px; }
             .section { padding: 60px 16px; }
             .word-card { padding: 32px 20px; }
+            .word-detail-card { padding: 32px 20px; }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
     <!-- Navigation -->
@@ -326,6 +360,7 @@
                     <button class="action-btn" onclick="showFact()">💡 Did You Know?</button>
                     <button class="action-btn" onclick="showQuiz()">⭐ Quiz</button>
                     <button class="action-btn" onclick="showGame()">🎮 Game</button>
+                    <button class="action-btn" onclick="showWordDetail()">🔗 Word Page</button>
                 </div>
             </div>
 
@@ -335,6 +370,40 @@
             </div>
 
             <div class="dots-row" id="dotsRow"></div>
+        </div>
+    </div>
+
+    <!-- Word Detail Page (for QR Codes) -->
+    <div id="wordDetailPage" class="word-detail-page">
+        <div class="section" style="max-width: 700px;">
+            <a href="#" class="back-btn" onclick="showHome(); return false;">← Back to Home</a>
+            <div class="word-detail-card" id="wordDetailCard" style="border-color: #bbf7d0;">
+                <div class="word-detail-english" id="wordDetailEnglish">Seed</div>
+                <div class="word-detail-phonetic" id="wordDetailPhonetic">/siːd/</div>
+                <div class="word-detail-arabic" id="wordDetailArabic" style="background: #f0fdf4; color: #166534;">بذرة</div>
+
+                <div class="audio-row">
+                    <button class="audio-btn" onclick="speakDetailWord('normal')">🔊 Normal</button>
+                    <button class="audio-btn" onclick="speakDetailWord('slow')">🐢 Slow</button>
+                    <button class="audio-btn" onclick="speakDetailWord('american')">🇺🇸 American</button>
+                    <button class="audio-btn" onclick="speakDetailWord('british')">🇬🇧 British</button>
+                </div>
+
+                <div class="word-detail-fact">
+                    <div class="word-detail-fact-title">💡 Did You Know?</div>
+                    <div class="word-detail-fact-text" id="wordDetailFact">A seed contains a tiny baby plant inside it!</div>
+                </div>
+
+                <div class="word-detail-qr-info">
+                    <p>📖 Scan this QR code to learn this word anytime!</p>
+                    <p style="margin-top: 8px; font-weight: 700;" id="wordDetailUrl">URL will appear here</p>
+                </div>
+
+                <div class="word-detail-nav">
+                    <button class="nav-btn" onclick="showDetailPrev()">← Previous Word</button>
+                    <button class="nav-btn" onclick="showDetailNext()">Next Word →</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -370,17 +439,18 @@
 
     <!-- Game Modal -->
     <div class="modal-overlay" id="gameModal">
-        <div class="modal">
+        <div class="modal" style="max-width: 600px;">
             <div class="modal-header">
                 <span style="font-size: 28px;">🎮</span>
-                <span class="modal-title">Mini Game</span>
+                <span class="modal-title" id="gameTitle">Mini Game</span>
             </div>
-            <p style="text-align: center; color: #64748b; margin-bottom: 20px;" id="gameDesc">Help Adam assemble the plant parts!</p>
-            <div style="text-align: center; font-size: 48px; margin-bottom: 20px;">🎮</div>
-            <div style="background: #f1f5f9; border-radius: 20px; padding: 40px; text-align: center; color: #94a3b8; font-size: 18px;">
-                Game coming soon!
+            <div class="game-container" id="gameContainer">
+                <!-- Game content will be injected here -->
             </div>
-            <button class="modal-close" style="background: #22c55e; color: white;" onclick="closeModal('gameModal')">Close</button>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-close" style="background: #22c55e; color: white; flex: 1;" id="gameRetryBtn" onclick="restartGame()" style="display: none;">🔄 Play Again</button>
+                <button class="modal-close" style="background: #e2e8f0; color: #475569; flex: 1;" onclick="closeModal('gameModal')">Close</button>
+            </div>
         </div>
     </div>
 
@@ -640,11 +710,92 @@ const worldConfig = {
   "human-body": { title: "Human Body", subtitle: "Human Body World", color: "#ef4444", bgColor: "#fef2f2", borderColor: "#fecaca", icon: "❤️" }
 };
 
+// Game Data for each world
+const gameData = {
+  plants: {
+    title: "🌿 Plant Parts Puzzle",
+    description: "Drag each plant part to its correct place!",
+    targets: [
+      { label: "🌱 Underground part", accepts: ["Root"], hint: "It absorbs water from soil" },
+      { label: "🌿 Green flat part", accepts: ["Leaf"], hint: "It makes food using sunlight" },
+      { label: "🌸 Colorful part", accepts: ["Flower", "Petal"], hint: "It attracts insects" },
+      { label: "🌳 Tall woody part", accepts: ["Tree", "Stem", "Trunk"], hint: "It supports the plant" }
+    ],
+    pieces: [
+      { text: "🌱 Root", value: "Root" },
+      { text: "🌿 Leaf", value: "Leaf" },
+      { text: "🌸 Flower", value: "Flower" },
+      { text: "🌳 Tree", value: "Tree" },
+      { text: "🌻 Petal", value: "Petal" },
+      { text: "🌿 Stem", value: "Stem" }
+    ]
+  },
+  animals: {
+    title: "🦁 Animal Sounds Match",
+    description: "Drag each animal to its sound!",
+    targets: [
+      { label: "🔊 Roar!", accepts: ["Lion", "Tiger"], hint: "King of the jungle" },
+      { label: "🔊 Trumpet!", accepts: ["Elephant"], hint: "Largest land animal" },
+      { label: "🔊 Buzz!", accepts: ["Bee"], hint: "Makes honey" },
+      { label: "🔊 Hoot!", accepts: ["Owl"], hint: "Night bird" }
+    ],
+    pieces: [
+      { text: "🦁 Lion", value: "Lion" },
+      { text: "🐘 Elephant", value: "Elephant" },
+      { text: "🐝 Bee", value: "Bee" },
+      { text: "🦉 Owl", value: "Owl" },
+      { text: "🐅 Tiger", value: "Tiger" }
+    ]
+  },
+  "earth-space": {
+    title: "🌍 Planet Order Game",
+    description: "Arrange the planets from closest to farthest from the Sun!",
+    targets: [
+      { label: "1️⃣ Closest to Sun", accepts: ["Mercury"], hint: "Smallest and fastest" },
+      { label: "2️⃣ Second planet", accepts: ["Venus"], hint: "Hottest planet" },
+      { label: "3️⃣ Our home", accepts: ["Earth"], hint: "Only planet with life" },
+      { label: "4️⃣ Red Planet", accepts: ["Mars"], hint: "Has the biggest volcano" }
+    ],
+    pieces: [
+      { text: "🌍 Earth", value: "Earth" },
+      { text: "🔴 Mars", value: "Mars" },
+      { text: "☿ Mercury", value: "Mercury" },
+      { text: "♀ Venus", value: "Venus" }
+    ]
+  },
+  "human-body": {
+    title: "❤️ Body Organs Match",
+    description: "Drag each organ to its function!",
+    targets: [
+      { label: "🧠 Controls body", accepts: ["Brain"], hint: "Contains 86 billion cells" },
+      { label: "❤️ Pumps blood", accepts: ["Heart"], hint: "Beats 100,000 times daily" },
+      { label: "🫁 Breathes air", accepts: ["Lung"], hint: "We have two of them" },
+      { label: "🍽️ Digests food", accepts: ["Stomach"], hint: "Uses strong acids" }
+    ],
+    pieces: [
+      { text: "🧠 Brain", value: "Brain" },
+      { text: "❤️ Heart", value: "Heart" },
+      { text: "🫁 Lung", value: "Lung" },
+      { text: "🍽️ Stomach", value: "Stomach" }
+    ]
+  }
+};
+
 let currentWorld = null;
 let currentIndex = 0;
 let stars = parseInt(localStorage.getItem('mhs_stars') || '0');
 let completed = JSON.parse(localStorage.getItem('mhs_completed') || '{}');
 let showTranslation = false;
+let currentGame = null;
+let gameScore = 0;
+
+// Get base URL for QR codes
+function getBaseUrl() {
+  let path = window.location.pathname;
+  path = path.replace(/index\.html$/, '');
+  path = path.replace(/\/$/, '');
+  return window.location.origin + path;
+}
 
 function updateStars() {
   document.getElementById('starCount').textContent = stars;
@@ -658,8 +809,10 @@ function saveProgress() {
 function showHome() {
   document.getElementById('homePage').style.display = 'block';
   document.getElementById('vocabPage').classList.remove('active');
+  document.getElementById('wordDetailPage').classList.remove('active');
   document.getElementById('mainFooter').style.display = 'block';
   window.scrollTo(0, 0);
+  history.pushState(null, '', window.location.pathname);
 }
 
 function scrollToWorlds() {
@@ -674,6 +827,7 @@ function showWorld(worldId) {
 
   document.getElementById('homePage').style.display = 'none';
   document.getElementById('vocabPage').classList.add('active');
+  document.getElementById('wordDetailPage').classList.remove('active');
   document.getElementById('mainFooter').style.display = 'none';
 
   document.getElementById('worldTitle').textContent = config.title;
@@ -855,16 +1009,217 @@ function selectQuiz(index) {
   }
 }
 
+// ==================== GAME FUNCTIONS ====================
+
 function showGame() {
-  const descs = {
-    plants: "Help Adam assemble the plant parts! Drag each part to its correct place.",
-    animals: "Help Adam match the animals with their sounds! Click on the correct animal.",
-    "earth-space": "Help Adam arrange the planets! Place each planet in its correct orbit.",
-    "human-body": "Help Adam identify body organs! Click on the correct organ."
-  };
-  document.getElementById('gameDesc').textContent = descs[currentWorld] || "Let's play!";
+  const game = gameData[currentWorld];
+  if (!game) {
+    alert('Game coming soon for this world!');
+    return;
+  }
+
+  document.getElementById('gameTitle').textContent = game.title;
+  currentGame = JSON.parse(JSON.stringify(game)); // Deep copy
+  gameScore = 0;
+  renderGame();
   openModal('gameModal');
 }
+
+function renderGame() {
+  const game = currentGame;
+  const container = document.getElementById('gameContainer');
+
+  let html = `<p style="text-align: center; color: #64748b; margin-bottom: 20px;">${game.description}</p>`;
+  html += `<div class="game-score">Score: ${gameScore} / ${game.targets.length}</div>`;
+
+  // Targets
+  html += '<div class="game-targets">';
+  game.targets.forEach((target, i) => {
+    const filled = target.filled ? 'filled' : '';
+    const content = target.filled ? target.filledText : (target.hint ? `💡 ${target.hint}` : 'Drop here');
+    html += `
+      <div class="game-target-item">
+        <div class="game-target-label">${target.label}</div>
+        <div class="game-target-slot ${filled}" id="target${i}" ondrop="drop(event, ${i})" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+          ${content}
+        </div>
+      </div>
+    `;
+  });
+  html += '</div>';
+
+  // Draggable pieces
+  html += '<div style="margin-top: 20px; font-weight: 700; text-align: center;">Drag the pieces:</div>';
+  html += '<div class="game-pieces">';
+  game.pieces.forEach((piece, i) => {
+    if (!piece.used) {
+      html += `
+        <div class="game-draggable" id="piece${i}" draggable="true" ondragstart="drag(event, ${i})" ondragend="dragEnd(event)">
+          ${piece.text}
+        </div>
+      `;
+    }
+  });
+  html += '</div>';
+
+  // Check if game completed
+  const allFilled = game.targets.every(t => t.filled);
+  if (allFilled) {
+    html += `<div style="text-align: center; margin-top: 20px; padding: 20px; background: #dcfce7; border-radius: 16px; color: #166534; font-weight: 800; font-size: 20px;">
+      🎉 Congratulations! You completed the game! 🎉<br>
+      <span style="font-size: 16px; font-weight: 600;">Score: ${gameScore}/${game.targets.length}</span>
+    </div>`;
+    document.getElementById('gameRetryBtn').style.display = 'block';
+  } else {
+    document.getElementById('gameRetryBtn').style.display = 'none';
+  }
+
+  container.innerHTML = html;
+}
+
+function allowDrop(ev) {
+  ev.preventDefault();
+  ev.currentTarget.classList.add('drag-over');
+}
+
+function dragLeave(ev) {
+  ev.currentTarget.classList.remove('drag-over');
+}
+
+function drag(ev, pieceIndex) {
+  ev.dataTransfer.setData('pieceIndex', pieceIndex);
+  ev.target.classList.add('dragging');
+}
+
+function dragEnd(ev) {
+  ev.target.classList.remove('dragging');
+}
+
+function drop(ev, targetIndex) {
+  ev.preventDefault();
+  ev.currentTarget.classList.remove('drag-over');
+
+  const pieceIndex = parseInt(ev.dataTransfer.getData('pieceIndex'));
+  const piece = currentGame.pieces[pieceIndex];
+  const target = currentGame.targets[targetIndex];
+
+  if (target.filled) return;
+
+  // Check if piece matches target
+  const isCorrect = target.accepts.includes(piece.value);
+
+  if (isCorrect) {
+    target.filled = true;
+    target.filledText = piece.text;
+    piece.used = true;
+    gameScore++;
+
+    // Play success sound (visual feedback)
+    const slot = document.getElementById(`target${targetIndex}`);
+    slot.classList.add('correct');
+    slot.innerHTML = piece.text;
+
+    setTimeout(() => {
+      renderGame();
+    }, 500);
+  } else {
+    const slot = document.getElementById(`target${targetIndex}`);
+    slot.classList.add('wrong');
+    slot.textContent = '❌ Try again!';
+
+    setTimeout(() => {
+      slot.classList.remove('wrong');
+      slot.textContent = target.hint ? `💡 ${target.hint}` : 'Drop here';
+    }, 1000);
+  }
+}
+
+function restartGame() {
+  showGame();
+}
+
+// ==================== WORD DETAIL PAGE (FOR QR) ====================
+
+function showWordDetail() {
+  const word = vocabData[currentWorld][currentIndex];
+  const config = worldConfig[currentWorld];
+
+  document.getElementById('homePage').style.display = 'none';
+  document.getElementById('vocabPage').classList.remove('active');
+  document.getElementById('wordDetailPage').classList.add('active');
+  document.getElementById('mainFooter').style.display = 'none';
+
+  const card = document.getElementById('wordDetailCard');
+  card.style.borderColor = config.borderColor;
+
+  document.getElementById('wordDetailEnglish').textContent = word.en;
+  document.getElementById('wordDetailPhonetic').textContent = word.ph;
+  document.getElementById('wordDetailArabic').textContent = word.ar;
+  document.getElementById('wordDetailArabic').style.background = config.bgColor;
+  document.getElementById('wordDetailArabic').style.color = config.color;
+  document.getElementById('wordDetailFact').textContent = word.fact;
+
+  // Generate URL for this specific word
+  const baseUrl = getBaseUrl();
+  const wordUrl = `${baseUrl}/?world=${currentWorld}&word=${currentIndex}`;
+  document.getElementById('wordDetailUrl').textContent = wordUrl;
+
+  window.scrollTo(0, 0);
+}
+
+function speakDetailWord(type) {
+  const word = vocabData[currentWorld][currentIndex].en;
+  if (!window.speechSynthesis) {
+    alert('Sorry, your browser does not support speech.');
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.rate = type === 'slow' ? 0.5 : 1;
+  utterance.lang = type === 'british' ? 'en-GB' : 'en-US';
+  window.speechSynthesis.speak(utterance);
+}
+
+function showDetailPrev() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showWordDetail();
+  }
+}
+
+function showDetailNext() {
+  if (currentIndex < vocabData[currentWorld].length - 1) {
+    currentIndex++;
+    showWordDetail();
+  }
+}
+
+// ==================== URL ROUTING ====================
+
+function handleUrlParams() {
+  const params = new URLSearchParams(window.location.search);
+  const world = params.get('world');
+  const wordIndex = params.get('word');
+
+  if (world && vocabData[world] && wordIndex !== null) {
+    const index = parseInt(wordIndex);
+    if (index >= 0 && index < vocabData[world].length) {
+      currentWorld = world;
+      currentIndex = index;
+      showWordDetail();
+      return true;
+    }
+  }
+
+  if (world && vocabData[world]) {
+    showWorld(world);
+    return true;
+  }
+
+  return false;
+}
+
+// ==================== MODAL FUNCTIONS ====================
 
 function openModal(id) {
   document.getElementById(id).classList.add('active');
@@ -881,8 +1236,25 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
   });
 });
 
-// Initialize
-updateStars();
-</script>
+// ==================== INITIALIZATION ====================
+
+// Handle browser back/forward
+window.addEventListener('popstate', function() {
+  if (!handleUrlParams()) {
+    showHome();
+  }
+});
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+  updateStars();
+
+  // Check URL parameters
+  if (!handleUrlParams()) {
+    showHome();
+  }
+});
+
+    </script>
 </body>
 </html>
