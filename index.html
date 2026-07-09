@@ -112,33 +112,39 @@
         @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
         .quiz-result { margin-top: 16px; padding: 16px; border-radius: 16px; text-align: center; font-weight: 700; font-size: 18px; }
 
-        /* Per-Word Game Styles */
-        .word-game-container { padding: 20px; text-align: center; }
-        .word-game-title { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
-        .word-game-desc { color: #64748b; margin-bottom: 20px; }
-        .word-game-question { font-size: 20px; font-weight: 700; margin-bottom: 20px; padding: 16px; background: #f1f5f9; border-radius: 16px; }
-        .word-game-options { display: flex; flex-direction: column; gap: 10px; }
-        .word-game-option { padding: 16px; border-radius: 16px; border: 2px solid #e2e8f0; background: white; font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-        .word-game-option:hover { border-color: #93c5fd; background: #eff6ff; transform: translateY(-2px); }
-        .word-game-option.correct { border-color: #22c55e; background: #f0fdf4; color: #15803d; }
-        .word-game-option.wrong { border-color: #ef4444; background: #fef2f2; color: #b91c1c; animation: shake 0.5s; }
-        .word-game-score { font-size: 28px; font-weight: 900; margin: 20px 0; }
-        .word-game-letters { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 20px 0; }
-        .word-game-letter { width: 48px; height: 48px; border-radius: 12px; background: white; border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; cursor: pointer; transition: all 0.2s; }
-        .word-game-letter:hover { background: #eff6ff; border-color: #3b82f6; }
-        .word-game-letter.revealed { background: #dcfce7; border-color: #22c55e; color: #166534; }
-        .word-game-letter.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
-        .word-game-blanks { display: flex; justify-content: center; gap: 8px; margin: 20px 0; }
-        .word-game-blank { width: 48px; height: 48px; border-radius: 12px; background: #f1f5f9; border: 2px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; }
-        .word-game-blank.filled { background: #dbeafe; border-style: solid; border-color: #3b82f6; }
-        .word-game-hint { background: #fef3c7; border-radius: 12px; padding: 12px 16px; margin: 16px 0; color: #92400e; font-size: 14px; }
-        .word-game-memory { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 320px; margin: 20px auto; }
-        .word-game-card { aspect-ratio: 1; border-radius: 16px; background: linear-gradient(135deg, #3b82f6, #1e40af); display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; transition: all 0.3s; border: none; }
-        .word-game-card:hover { transform: scale(1.05); }
-        .word-game-card.flipped { background: white; border: 2px solid #e2e8f0; }
-        .word-game-card.matched { background: #dcfce7; border: 2px solid #22c55e; }
-        .word-game-card-content { display: none; }
-        .word-game-card.flipped .word-game-card-content, .word-game-card.matched .word-game-card-content { display: block; }
+        /* Game Tabs */
+        .game-tabs { display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; }
+        .game-tab { padding: 10px 20px; border-radius: 50px; border: 2px solid #e2e8f0; background: white; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .game-tab:hover { background: #f8fafc; }
+        .game-tab.active { background: #2563eb; color: white; border-color: #2563eb; }
+        .game-panel { display: none; }
+        .game-panel.active { display: block; }
+
+        /* Memory Game */
+        .memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 360px; margin: 20px auto; }
+        .memory-card { aspect-ratio: 1; border-radius: 16px; cursor: pointer; transition: all 0.3s; border: none; display: flex; align-items: center; justify-content: center; font-size: 32px; position: relative; }
+        .memory-card.hidden { background: linear-gradient(135deg, #3b82f6, #1e40af); }
+        .memory-card.hidden::after { content: "❓"; font-size: 28px; }
+        .memory-card.hidden .memory-content { display: none; }
+        .memory-card.revealed { background: white; border: 2px solid #e2e8f0; transform: rotateY(180deg); }
+        .memory-card.matched { background: #dcfce7; border: 2px solid #22c55e; animation: matchPulse 0.5s; }
+        @keyframes matchPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .memory-content { font-size: 28px; }
+        .memory-card.matched .memory-content { display: block; }
+        .memory-stats { text-align: center; font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #64748b; }
+
+        /* Spelling Game */
+        .spelling-word { display: flex; justify-content: center; gap: 8px; margin: 24px 0; flex-wrap: wrap; }
+        .spelling-slot { width: 52px; height: 52px; border-radius: 14px; background: #f1f5f9; border: 2px dashed #cbd5e1; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 800; transition: all 0.3s; }
+        .spelling-slot.filled { background: #dbeafe; border-style: solid; border-color: #3b82f6; }
+        .spelling-slot.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
+        .spelling-slot.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; animation: shake 0.5s; }
+        .spelling-letters { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 20px 0; }
+        .spelling-letter { width: 48px; height: 48px; border-radius: 12px; background: white; border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .spelling-letter:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+        .spelling-letter.used { opacity: 0.3; pointer-events: none; }
+        .spelling-hint { background: #fef3c7; border-radius: 12px; padding: 12px 16px; margin: 16px 0; color: #92400e; font-size: 14px; }
+        .spelling-actions { display: flex; justify-content: center; gap: 10px; margin-top: 16px; }
 
         /* Word Detail Page (Full QR Page) */
         .word-detail-page { display: none; min-height: 100vh; padding-top: 80px; padding-bottom: 40px; }
@@ -150,15 +156,12 @@
         .word-detail-fact { background: #f0f9ff; border-radius: 16px; padding: 20px; margin: 24px 0; text-align: left; }
         .word-detail-fact-title { font-weight: 800; color: #0369a1; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
         .word-detail-fact-text { color: #475569; line-height: 1.6; }
-        .word-detail-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 24px 0; }
-        .word-detail-action-btn { display: flex; align-items: center; gap: 6px; padding: 12px 20px; border-radius: 50px; border: 2px solid; background: white; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-        .word-detail-action-btn:hover { transform: translateY(-2px); }
+        .word-detail-section { margin: 24px 0; padding: 20px; background: #f8fafc; border-radius: 20px; }
+        .word-detail-section-title { font-size: 18px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
         .word-detail-qr-info { background: #fef3c7; border-radius: 16px; padding: 16px; margin-top: 24px; text-align: center; }
         .word-detail-qr-info p { color: #92400e; font-size: 14px; }
         .word-detail-qr-info .url-text { margin-top: 8px; font-weight: 700; font-family: monospace; font-size: 12px; word-break: break-all; background: white; padding: 8px; border-radius: 8px; }
         .word-detail-nav { display: flex; justify-content: center; gap: 12px; margin-top: 24px; }
-        .word-detail-section { margin: 24px 0; padding: 20px; background: #f8fafc; border-radius: 20px; }
-        .word-detail-section-title { font-size: 18px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
 
         /* Footer */
         .footer { background: #0f172a; color: white; padding: 60px 20px 30px; }
@@ -181,6 +184,7 @@
             .section { padding: 60px 16px; }
             .word-card { padding: 32px 20px; }
             .word-detail-card { padding: 32px 20px; }
+            .memory-grid { grid-template-columns: repeat(3, 1fr); }
         }
     </style>
 <base target="_blank">
@@ -375,8 +379,7 @@
 
                 <div class="action-row">
                     <button class="action-btn" onclick="showFact()">💡 Did You Know?</button>
-                    <button class="action-btn" onclick="showQuiz()">⭐ Quiz</button>
-                    <button class="action-btn" onclick="showWordGame()">🎮 Word Game</button>
+                    <button class="action-btn" onclick="showGamesModal()">🎮 Games</button>
                     <button class="action-btn" onclick="showWordDetail()">🔗 Word Page</button>
                 </div>
             </div>
@@ -415,18 +418,41 @@
                     <div class="word-detail-fact-text" id="wordDetailFact" style="text-align: left; color: #475569; line-height: 1.6;">A seed contains a tiny baby plant inside it!</div>
                 </div>
 
-                <!-- Quiz Section -->
+                <!-- Games Section with Tabs -->
                 <div class="word-detail-section">
-                    <div class="word-detail-section-title">⭐ Quick Quiz</div>
-                    <p style="color: #64748b; margin-bottom: 16px;" id="detailQuizQuestion">What is the meaning of "Seed"?</p>
-                    <div class="quiz-options" id="detailQuizOptions"></div>
-                    <div id="detailQuizResult"></div>
-                </div>
+                    <div class="word-detail-section-title">🎮 Games</div>
 
-                <!-- Word Game Section -->
-                <div class="word-detail-section">
-                    <div class="word-detail-section-title">🎮 Word Game</div>
-                    <div id="detailWordGame"></div>
+                    <div class="game-tabs">
+                        <button class="game-tab active" onclick="switchGameTab('quiz')">🎯 Quiz</button>
+                        <button class="game-tab" onclick="switchGameTab('memory')">🧠 Memory</button>
+                        <button class="game-tab" onclick="switchGameTab('spelling')">✏️ Spelling</button>
+                    </div>
+
+                    <!-- Quiz Panel -->
+                    <div class="game-panel active" id="quizPanel">
+                        <p style="color: #64748b; margin-bottom: 16px;" id="detailQuizQuestion">What is the meaning of "Seed"?</p>
+                        <div class="quiz-options" id="detailQuizOptions"></div>
+                        <div id="detailQuizResult"></div>
+                    </div>
+
+                    <!-- Memory Panel -->
+                    <div class="game-panel" id="memoryPanel">
+                        <div class="memory-stats" id="memoryStats">Find the matching pairs! Moves: 0</div>
+                        <div class="memory-grid" id="memoryGrid"></div>
+                        <div id="memoryResult"></div>
+                    </div>
+
+                    <!-- Spelling Panel -->
+                    <div class="game-panel" id="spellingPanel">
+                        <div class="spelling-hint" id="spellingHint">💡 Spell the word using the letters below</div>
+                        <div class="spelling-word" id="spellingSlots"></div>
+                        <div class="spelling-letters" id="spellingLetters"></div>
+                        <div class="spelling-actions">
+                            <button class="action-btn" onclick="resetSpelling()">🔄 Reset</button>
+                            <button class="action-btn" onclick="showSpellingHint()">💡 Hint</button>
+                        </div>
+                        <div id="spellingResult"></div>
+                    </div>
                 </div>
 
                 <!-- QR Info -->
@@ -457,37 +483,44 @@
         </div>
     </div>
 
-    <!-- Quiz Modal -->
-    <div class="modal-overlay" id="quizModal">
-        <div class="modal">
-            <div class="modal-header">
-                <span style="font-size: 28px;">⭐</span>
-                <span class="modal-title">Test Yourself! ⭐</span>
-            </div>
-            <p style="font-size: 18px; font-weight: 700; margin-bottom: 16px;" id="quizQuestion">What is the meaning of "Seed"?</p>
-            <div class="quiz-options" id="quizOptions"></div>
-            <div id="quizResult"></div>
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="modal-close" style="background: #f97316; color: white; flex: 1; display: none;" id="retryBtn" onclick="generateQuiz()">🔄 Try Again</button>
-                <button class="modal-close" style="background: #e2e8f0; color: #475569; flex: 1;" onclick="closeModal('quizModal')">Close</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Word Game Modal -->
-    <div class="modal-overlay" id="wordGameModal">
+    <!-- Games Modal (for vocab page) -->
+    <div class="modal-overlay" id="gamesModal">
         <div class="modal" style="max-width: 600px;">
             <div class="modal-header">
                 <span style="font-size: 28px;">🎮</span>
-                <span class="modal-title" id="wordGameModalTitle">Word Game</span>
+                <span class="modal-title">Word Games</span>
             </div>
-            <div class="word-game-container" id="wordGameModalContainer">
-                <!-- Game content injected here -->
+
+            <div class="game-tabs">
+                <button class="game-tab active" onclick="switchModalGameTab('modalQuiz')">🎯 Quiz</button>
+                <button class="game-tab" onclick="switchModalGameTab('modalMemory')">🧠 Memory</button>
+                <button class="game-tab" onclick="switchModalGameTab('modalSpelling')">✏️ Spelling</button>
             </div>
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button class="modal-close" style="background: #22c55e; color: white; flex: 1;" id="wordGameRetryBtn" onclick="restartWordGame()" style="display: none;">🔄 Play Again</button>
-                <button class="modal-close" style="background: #e2e8f0; color: #475569; flex: 1;" onclick="closeModal('wordGameModal')">Close</button>
+
+            <div class="game-panel active" id="modalQuizPanel">
+                <p style="color: #64748b; margin-bottom: 16px;" id="modalQuizQuestion">What is the meaning of "Seed"?</p>
+                <div class="quiz-options" id="modalQuizOptions"></div>
+                <div id="modalQuizResult"></div>
             </div>
+
+            <div class="game-panel" id="modalMemoryPanel">
+                <div class="memory-stats" id="modalMemoryStats">Find the matching pairs! Moves: 0</div>
+                <div class="memory-grid" id="modalMemoryGrid"></div>
+                <div id="modalMemoryResult"></div>
+            </div>
+
+            <div class="game-panel" id="modalSpellingPanel">
+                <div class="spelling-hint" id="modalSpellingHint">💡 Spell the word using the letters below</div>
+                <div class="spelling-word" id="modalSpellingSlots"></div>
+                <div class="spelling-letters" id="modalSpellingLetters"></div>
+                <div class="spelling-actions">
+                    <button class="action-btn" onclick="resetModalSpelling()">🔄 Reset</button>
+                    <button class="action-btn" onclick="showModalSpellingHint()">💡 Hint</button>
+                </div>
+                <div id="modalSpellingResult"></div>
+            </div>
+
+            <button class="modal-close" style="background: #e2e8f0; color: #475569; margin-top: 20px;" onclick="closeModal('gamesModal')">Close</button>
         </div>
     </div>
 
@@ -752,10 +785,11 @@ let currentIndex = 0;
 let stars = parseInt(localStorage.getItem('mhs_stars') || '0');
 let completed = JSON.parse(localStorage.getItem('mhs_completed') || '{}');
 let showTranslation = false;
-let currentQuiz = null;
-let currentWordGame = null;
 
-// Get base URL for QR codes
+// Game state
+let memoryState = { cards: [], flipped: [], matched: [], moves: 0, isLocked: false };
+let spellingState = { slots: [], letters: [], currentSlot: 0 };
+
 function getBaseUrl() {
   let path = window.location.pathname;
   path = path.replace(/index\.html$/, '');
@@ -799,9 +833,7 @@ function showWorld(worldId) {
   document.getElementById('worldTitle').textContent = config.title;
   document.getElementById('worldSubtitle').textContent = config.subtitle;
 
-  const card = document.getElementById('wordCard');
-  card.style.borderColor = config.borderColor;
-
+  document.getElementById('wordCard').style.borderColor = config.borderColor;
   document.getElementById('progressFill').style.background = config.color;
 
   renderDots();
@@ -819,9 +851,7 @@ function renderWord() {
   document.getElementById('arabicMeaning').textContent = word.ar;
   document.getElementById('arabicMeaning').style.background = config.bgColor;
   document.getElementById('arabicMeaning').style.color = config.color;
-
   document.getElementById('wordStarred').style.display = isCompleted ? 'block' : 'none';
-
   document.getElementById('translateBtn').style.background = config.color;
 
   if (showTranslation) {
@@ -891,15 +921,12 @@ function goToWord(index) {
 
 function speakWord(type) {
   const word = vocabData[currentWorld][currentIndex].en;
-  if (!window.speechSynthesis) {
-    alert('Sorry, your browser does not support speech.');
-    return;
-  }
+  if (!window.speechSynthesis) { alert('Sorry, speech not supported.'); return; }
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(word);
-  utterance.rate = type === 'slow' ? 0.5 : 1;
-  utterance.lang = type === 'british' ? 'en-GB' : 'en-US';
-  window.speechSynthesis.speak(utterance);
+  const u = new SpeechSynthesisUtterance(word);
+  u.rate = type === 'slow' ? 0.5 : 1;
+  u.lang = type === 'british' ? 'en-GB' : 'en-US';
+  window.speechSynthesis.speak(u);
 }
 
 function showFact() {
@@ -909,14 +936,10 @@ function showFact() {
   openModal('factModal');
 }
 
-function showQuiz() {
-  generateQuiz();
-  openModal('quizModal');
-}
 
-function generateQuiz() {
-  const word = vocabData[currentWorld][currentIndex];
-  const allWords = vocabData[currentWorld];
+// ==================== QUIZ GAME ====================
+
+function generateQuizOptions(word, allWords) {
   const correct = word.ar;
   const distractors = [];
   const used = new Set([currentIndex]);
@@ -930,292 +953,292 @@ function generateQuiz() {
   }
 
   const options = [correct, ...distractors].sort(() => Math.random() - 0.5);
-  const correctIndex = options.indexOf(correct);
+  return { options, correctIndex: options.indexOf(correct) };
+}
 
-  currentQuiz = { options, correctIndex };
+function renderQuiz(containerId, resultId, questionId) {
+  const word = vocabData[currentWorld][currentIndex];
+  const allWords = vocabData[currentWorld];
+  const quiz = generateQuizOptions(word, allWords);
 
-  document.getElementById('quizQuestion').textContent = `What is the meaning of "${word.en}"?`;
+  document.getElementById(questionId).textContent = `What is the meaning of "${word.en}"?`;
 
   let html = '';
-  options.forEach((opt, i) => {
-    html += `<button class="quiz-option" id="quizOpt${i}" onclick="selectQuiz(${i})">${opt}</button>`;
+  quiz.options.forEach((opt, i) => {
+    html += `<button class="quiz-option" id="${containerId}Opt${i}" onclick="selectQuizAnswer('${containerId}', ${i}, ${quiz.correctIndex}, '${resultId}')">${opt}</button>`;
   });
-  document.getElementById('quizOptions').innerHTML = html;
-  document.getElementById('quizResult').innerHTML = '';
-  document.getElementById('retryBtn').style.display = 'none';
+  document.getElementById(containerId).innerHTML = html;
+  document.getElementById(resultId).innerHTML = '';
 }
 
-function selectQuiz(index) {
-  if (!currentQuiz) return;
-  const correct = index === currentQuiz.correctIndex;
+function selectQuizAnswer(containerId, selectedIndex, correctIndex, resultId) {
+  const correct = selectedIndex === correctIndex;
+  const container = document.getElementById(containerId);
+  const buttons = container.getElementsByTagName('button');
 
-  currentQuiz.options.forEach((_, i) => {
-    const btn = document.getElementById(`quizOpt${i}`);
-    btn.disabled = true;
-    if (i === currentQuiz.correctIndex) btn.classList.add('correct');
-    else if (i === index && !correct) btn.classList.add('wrong');
-  });
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = true;
+    if (i === correctIndex) buttons[i].classList.add('correct');
+    else if (i === selectedIndex && !correct) buttons[i].classList.add('wrong');
+  }
 
-  const resultDiv = document.getElementById('quizResult');
+  const resultDiv = document.getElementById(resultId);
   if (correct) {
     resultDiv.innerHTML = '<div class="quiz-result" style="background: #dcfce7; color: #166534;">⭐ Great job! You earned a star! ⭐</div>';
-    if (!completed[currentWorld]) completed[currentWorld] = [];
-    if (!completed[currentWorld].includes(currentIndex)) {
-      completed[currentWorld].push(currentIndex);
-      stars++;
-      updateStars();
-      saveProgress();
-      renderWord();
-    }
+    awardStar();
   } else {
     resultDiv.innerHTML = '<div class="quiz-result" style="background: #fee2e2; color: #991b1b;">💪 Try again!</div>';
-    document.getElementById('retryBtn').style.display = 'block';
   }
 }
 
-
-// ==================== PER-WORD GAME GENERATORS ====================
-// Each word gets a unique game based on its properties
-
-function generateWordGame(world, wordIndex) {
-  const word = vocabData[world][wordIndex];
-  const allWords = vocabData[world];
-  const gameType = wordIndex % 4; // Cycle through 4 game types
-
-  switch(gameType) {
-    case 0: return generateScrambleGame(word, allWords);
-    case 1: return generateMissingLetterGame(word, allWords);
-    case 2: return generateMatchGame(word, allWords);
-    case 3: return generateTrueFalseGame(word, allWords);
-    default: return generateScrambleGame(word, allWords);
+function awardStar() {
+  if (!completed[currentWorld]) completed[currentWorld] = [];
+  if (!completed[currentWorld].includes(currentIndex)) {
+    completed[currentWorld].push(currentIndex);
+    stars++;
+    updateStars();
+    saveProgress();
+    if (document.getElementById('wordStarred')) renderWord();
   }
 }
 
-// Game 1: Scramble - Unscramble the word letters
-function generateScrambleGame(word, allWords) {
-  const letters = word.en.split('').sort(() => Math.random() - 0.5);
-  const distractors = [];
-  const used = new Set([word.en.toLowerCase()]);
+// ==================== MEMORY GAME ====================
 
-  // Get 3 other words from same world
+function generateMemoryGame(word, allWords) {
+  // Create pairs: word -> emoji/icon representation
+  const pairs = [];
+
+  // Main word pair
+  pairs.push({ id: 0, text: word.en, type: 'word' });
+  pairs.push({ id: 0, text: word.ar, type: 'meaning' });
+
+  // Add 3 more random word pairs from same world
+  const used = new Set([currentIndex]);
   let attempts = 0;
-  while (distractors.length < 3 && attempts < 50) {
-    const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
-    const lower = randomWord.en.toLowerCase();
-    if (!used.has(lower) && randomWord.en.length > 3) {
-      used.add(lower);
-      distractors.push(randomWord.en);
+
+  while (pairs.length < 16 && attempts < 100) {
+    const idx = Math.floor(Math.random() * allWords.length);
+    if (!used.has(idx) && allWords[idx].en.length <= 12) {
+      used.add(idx);
+      pairs.push({ id: pairs.length / 2, text: allWords[idx].en, type: 'word' });
+      pairs.push({ id: pairs.length / 2, text: allWords[idx].ar, type: 'meaning' });
     }
     attempts++;
   }
 
-  const options = [word.en, ...distractors].sort(() => Math.random() - 0.5);
-
-  return {
-    type: 'scramble',
-    title: `🔤 Unscramble: "${word.en}"`,
-    description: `Arrange these letters to form the word: <strong>${letters.join(' ')}</strong>`,
-    question: `What word can you make from: ${letters.join(' ')}?`,
-    options: options,
-    correct: word.en,
-    hint: `It means "${word.ar}" in Arabic`
-  };
+  // Shuffle
+  return pairs.sort(() => Math.random() - 0.5);
 }
 
-// Game 2: Missing Letter - Fill in the blank
-function generateMissingLetterGame(word, allWords) {
-  const w = word.en;
-  let masked = w;
+function renderMemoryGame(gridId, statsId, resultId, isModal) {
+  const word = vocabData[currentWorld][currentIndex];
+  const allWords = vocabData[currentWorld];
+  const cards = generateMemoryGame(word, allWords);
 
-  // Mask 2-3 random letters
-  const indices = [];
-  for (let i = 1; i < w.length - 1; i++) {
-    if (/[a-zA-Z]/.test(w[i])) indices.push(i);
-  }
+  memoryState = { cards, flipped: [], matched: [], moves: 0, isLocked: false };
 
-  // Shuffle and pick 2-3
-  indices.sort(() => Math.random() - 0.5);
-  const toMask = indices.slice(0, Math.min(3, Math.max(2, Math.floor(w.length / 3))));
+  document.getElementById(statsId).textContent = `Find the matching pairs! Moves: 0`;
+  document.getElementById(resultId).innerHTML = '';
 
-  const maskedLetters = [];
-  toMask.forEach(i => {
-    maskedLetters.push(w[i]);
-    masked = masked.substring(0, i) + '_' + masked.substring(i + 1);
+  let html = '';
+  cards.forEach((card, i) => {
+    html += `<button class="memory-card hidden" id="memCard${isModal ? 'Modal' : ''}${i}" onclick="flipMemoryCard(${i}, '${isModal}')">
+      <span class="memory-content">${card.text}</span>
+    </button>`;
   });
-
-  // Generate wrong options by changing the masked letters
-  const options = [word.en];
-  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-
-  for (let i = 0; i < 3; i++) {
-    let wrong = w;
-    toMask.forEach(idx => {
-      const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
-      wrong = wrong.substring(0, idx) + randomLetter + wrong.substring(idx + 1);
-    });
-    if (wrong !== word.en && !options.includes(wrong)) {
-      options.push(wrong);
-    }
-  }
-
-  // Fill remaining with other words if needed
-  while (options.length < 4) {
-    const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
-    if (!options.includes(randomWord.en)) {
-      options.push(randomWord.en);
-    }
-  }
-
-  return {
-    type: 'missing',
-    title: `✏️ Fill the Blanks: "${word.en}"`,
-    description: `Fill in the missing letters: <strong style="font-size: 24px; letter-spacing: 4px;">${masked}</strong>`,
-    question: `Complete the word: ${masked}`,
-    options: options.sort(() => Math.random() - 0.5),
-    correct: word.en,
-    hint: `The missing letters are: ${maskedLetters.join(', ')}`
-  };
+  document.getElementById(gridId).innerHTML = html;
 }
 
-// Game 3: Match - Match word to meaning
-function generateMatchGame(word, allWords) {
-  const correctMeaning = word.ar;
-  const distractors = [];
-  const used = new Set([word.en.toLowerCase()]);
+function flipMemoryCard(index, isModal) {
+  if (memoryState.isLocked) return;
+  if (memoryState.flipped.includes(index)) return;
+  if (memoryState.matched.includes(index)) return;
 
-  while (distractors.length < 3) {
-    const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
-    if (!used.has(randomWord.en.toLowerCase())) {
-      used.add(randomWord.en.toLowerCase());
-      distractors.push(randomWord.ar);
-    }
-  }
+  const prefix = isModal === 'true' ? 'memCardModal' : 'memCard';
+  const card = document.getElementById(prefix + index);
 
-  const options = [correctMeaning, ...distractors].sort(() => Math.random() - 0.5);
+  // Reveal card
+  card.classList.remove('hidden');
+  card.classList.add('revealed');
+  memoryState.flipped.push(index);
 
-  return {
-    type: 'match',
-    title: `🔗 Match: "${word.en}"`,
-    description: `What does "${word.en}" mean in Arabic?`,
-    question: `What is the Arabic meaning of "${word.en}"?`,
-    options: options,
-    correct: correctMeaning,
-    hint: `It starts with the letter "${word.ar.charAt(0)}"`
-  };
-}
+  if (memoryState.flipped.length === 2) {
+    memoryState.moves++;
+    document.getElementById(isModal === 'true' ? 'modalMemoryStats' : 'memoryStats').textContent = 
+      `Find the matching pairs! Moves: ${memoryState.moves}`;
 
-// Game 4: True/False - Fact check
-function generateTrueFalseGame(word, allWords) {
-  const isTrue = Math.random() > 0.5;
-  let statement;
+    const [first, second] = memoryState.flipped;
+    const card1 = memoryState.cards[first];
+    const card2 = memoryState.cards[second];
 
-  if (isTrue) {
-    statement = word.fact;
-  } else {
-    // Create a false statement by mixing facts
-    const randomWord = allWords[Math.floor(Math.random() * allWords.length)];
-    if (randomWord.en !== word.en) {
-      statement = randomWord.fact.replace(randomWord.en, word.en);
+    if (card1.id === card2.id) {
+      // Match!
+      setTimeout(() => {
+        document.getElementById(prefix + first).classList.add('matched');
+        document.getElementById(prefix + second).classList.add('matched');
+        memoryState.matched.push(first, second);
+        memoryState.flipped = [];
+
+        // Check win
+        if (memoryState.matched.length === memoryState.cards.length) {
+          const resultId = isModal === 'true' ? 'modalMemoryResult' : 'memoryResult';
+          document.getElementById(resultId).innerHTML = 
+            `<div class="quiz-result" style="background: #dcfce7; color: #166534; margin-top: 16px;">
+              🎉 Amazing! You found all pairs in ${memoryState.moves} moves! ⭐
+            </div>`;
+          awardStar();
+        }
+      }, 500);
     } else {
-      statement = `The ${word.en} is the smallest thing in the universe.`;
+      // No match
+      memoryState.isLocked = true;
+      setTimeout(() => {
+        document.getElementById(prefix + first).classList.remove('revealed');
+        document.getElementById(prefix + first).classList.add('hidden');
+        document.getElementById(prefix + second).classList.remove('revealed');
+        document.getElementById(prefix + second).classList.add('hidden');
+        memoryState.flipped = [];
+        memoryState.isLocked = false;
+      }, 1000);
     }
   }
+}
 
-  return {
-    type: 'truefalse',
-    title: `🤔 Fact Check: "${word.en}"`,
-    description: `Is this statement about "${word.en}" true or false?`,
-    question: statement,
-    options: ['✅ True', '❌ False'],
-    correct: isTrue ? '✅ True' : '❌ False',
-    hint: `Think about: ${word.fact.substring(0, 30)}...`
+// ==================== SPELLING GAME ====================
+
+function generateSpellingGame(word) {
+  const letters = word.en.split('').sort(() => Math.random() - 0.5);
+  // Add some distractor letters
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+  while (letters.length < word.en.length + 3) {
+    const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+    if (!word.en.toLowerCase().includes(randomLetter)) {
+      letters.push(randomLetter);
+    }
+  }
+  return letters.sort(() => Math.random() - 0.5);
+}
+
+function renderSpellingGame(slotsId, lettersId, hintId, resultId, isModal) {
+  const word = vocabData[currentWorld][currentIndex];
+  const letters = generateSpellingGame(word);
+
+  spellingState = { 
+    word: word.en.toLowerCase(), 
+    slots: new Array(word.en.length).fill(''),
+    letters: letters.map((l, i) => ({ letter: l, used: false, id: i })),
+    currentSlot: 0
   };
-}
 
-// ==================== WORD GAME UI ====================
+  document.getElementById(hintId).textContent = `💡 Spell "${word.en}" using the letters below`;
+  document.getElementById(resultId).innerHTML = '';
 
-function showWordGame() {
-  const game = generateWordGame(currentWorld, currentIndex);
-  currentWordGame = game;
-  renderWordGameUI(game, 'wordGameModalContainer');
-  document.getElementById('wordGameModalTitle').textContent = game.title;
-  openModal('wordGameModal');
-}
-
-function renderWordGameUI(game, containerId) {
-  const container = document.getElementById(containerId);
-
-  let html = `<div class="word-game-desc">${game.description}</div>`;
-  html += `<div class="word-game-question">${game.question}</div>`;
-
-  if (game.hint) {
-    html += `<div class="word-game-hint">💡 Hint: ${game.hint}</div>`;
+  // Render slots
+  let slotsHtml = '';
+  for (let i = 0; i < word.en.length; i++) {
+    slotsHtml += `<div class="spelling-slot" id="${isModal ? 'modal' : ''}Slot${i}"></div>`;
   }
+  document.getElementById(slotsId).innerHTML = slotsHtml;
 
-  html += '<div class="word-game-options">';
-  game.options.forEach((opt, i) => {
-    html += `<button class="word-game-option" id="wgOpt${containerId}${i}" onclick="selectWordGameOption('${containerId}', ${i})">${opt}</button>`;
-  });
-  html += '</div>';
-
-  html += '<div id="wordGameResult"></div>';
-  html += '<div class="word-game-score" id="wordGameScore" style="display: none;"></div>';
-
-  container.innerHTML = html;
-  document.getElementById('wordGameRetryBtn').style.display = 'none';
+  // Render letters
+  renderSpellingLetters(lettersId, isModal);
 }
 
-function selectWordGameOption(containerId, index) {
-  if (!currentWordGame) return;
-  const game = currentWordGame;
-  const selected = game.options[index];
-  const correct = selected === game.correct;
-
-  // Disable all options
-  game.options.forEach((_, i) => {
-    const btn = document.getElementById(`wgOpt${containerId}${i}`);
-    if (btn) btn.disabled = true;
-  });
-
-  // Mark correct and wrong
-  game.options.forEach((opt, i) => {
-    const btn = document.getElementById(`wgOpt${containerId}${i}`);
-    if (!btn) return;
-    if (opt === game.correct) {
-      btn.classList.add('correct');
-    } else if (i === index && !correct) {
-      btn.classList.add('wrong');
+function renderSpellingLetters(lettersId, isModal) {
+  let html = '';
+  spellingState.letters.forEach((item, i) => {
+    if (!item.used) {
+      html += `<button class="spelling-letter" id="${isModal ? 'modal' : ''}Letter${i}" onclick="placeLetter(${i}, '${isModal}')">${item.letter}</button>`;
     }
   });
+  document.getElementById(lettersId).innerHTML = html;
+}
 
-  const resultDiv = document.getElementById('wordGameResult');
-  if (correct) {
-    resultDiv.innerHTML = '<div class="quiz-result" style="background: #dcfce7; color: #166534; margin-top: 16px;">🎉 Correct! Well done!</div>';
+function placeLetter(letterIndex, isModal) {
+  if (spellingState.currentSlot >= spellingState.word.length) return;
 
-    // Award star if not already completed
-    if (!completed[currentWorld]) completed[currentWorld] = [];
-    if (!completed[currentWorld].includes(currentIndex)) {
-      completed[currentWorld].push(currentIndex);
-      stars++;
-      updateStars();
-      saveProgress();
-      if (document.getElementById('wordStarred')) {
-        renderWord();
+  const letter = spellingState.letters[letterIndex].letter;
+  spellingState.slots[spellingState.currentSlot] = letter;
+  spellingState.letters[letterIndex].used = true;
+
+  const prefix = isModal === 'true' ? 'modal' : '';
+  const slot = document.getElementById(`${prefix}Slot${spellingState.currentSlot}`);
+  slot.textContent = letter;
+  slot.classList.add('filled');
+
+  spellingState.currentSlot++;
+  renderSpellingLetters(isModal === 'true' ? 'modalSpellingLetters' : 'spellingLetters', isModal);
+
+  // Check if complete
+  if (spellingState.currentSlot === spellingState.word.length) {
+    const userWord = spellingState.slots.join('').toLowerCase();
+    const resultId = isModal === 'true' ? 'modalSpellingResult' : 'spellingResult';
+
+    if (userWord === spellingState.word) {
+      // Correct!
+      for (let i = 0; i < spellingState.word.length; i++) {
+        document.getElementById(`${prefix}Slot${i}`).classList.add('correct');
       }
+      document.getElementById(resultId).innerHTML = 
+        '<div class="quiz-result" style="background: #dcfce7; color: #166534; margin-top: 16px;">🎉 Perfect spelling! You earned a star! ⭐</div>';
+      awardStar();
+    } else {
+      // Wrong
+      for (let i = 0; i < spellingState.word.length; i++) {
+        document.getElementById(`${prefix}Slot${i}`).classList.add('wrong');
+      }
+      document.getElementById(resultId).innerHTML = 
+        `<div class="quiz-result" style="background: #fee2e2; color: #991b1b; margin-top: 16px;">
+          💪 Close! The correct spelling is: ${spellingState.word}
+        </div>`;
     }
-  } else {
-    resultDiv.innerHTML = '<div class="quiz-result" style="background: #fee2e2; color: #991b1b; margin-top: 16px;">💪 Not quite! The correct answer is highlighted.</div>';
   }
-
-  document.getElementById('wordGameRetryBtn').style.display = 'block';
 }
 
-function restartWordGame() {
-  showWordGame();
+function resetSpelling() {
+  renderSpellingGame('spellingSlots', 'spellingLetters', 'spellingHint', 'spellingResult', false);
+}
+
+function resetModalSpelling() {
+  renderSpellingGame('modalSpellingSlots', 'modalSpellingLetters', 'modalSpellingHint', 'modalSpellingResult', true);
+}
+
+function showSpellingHint() {
+  const word = vocabData[currentWorld][currentIndex];
+  document.getElementById('spellingHint').textContent = `💡 The word starts with "${word.en.charAt(0)}" and has ${word.en.length} letters`;
+}
+
+function showModalSpellingHint() {
+  const word = vocabData[currentWorld][currentIndex];
+  document.getElementById('modalSpellingHint').textContent = `💡 The word starts with "${word.en.charAt(0)}" and has ${word.en.length} letters`;
 }
 
 
-// ==================== FULL WORD DETAIL PAGE (QR) ====================
+// ==================== MODAL GAMES (for vocab page) ====================
+
+function showGamesModal() {
+  // Initialize all 3 games
+  renderQuiz('modalQuizOptions', 'modalQuizResult', 'modalQuizQuestion');
+  renderMemoryGame('modalMemoryGrid', 'modalMemoryStats', 'modalMemoryResult', true);
+  renderSpellingGame('modalSpellingSlots', 'modalSpellingLetters', 'modalSpellingHint', 'modalSpellingResult', true);
+
+  // Reset to Quiz tab
+  switchModalGameTab('modalQuiz');
+
+  openModal('gamesModal');
+}
+
+function switchModalGameTab(tabName) {
+  // Update tabs
+  document.querySelectorAll('#gamesModal .game-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+
+  // Update panels
+  document.querySelectorAll('#gamesModal .game-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(tabName + 'Panel').classList.add('active');
+}
+
+// ==================== WORD DETAIL PAGE (QR) ====================
 
 function showWordDetail() {
   const word = vocabData[currentWorld][currentIndex];
@@ -1236,35 +1259,43 @@ function showWordDetail() {
   document.getElementById('wordDetailArabic').style.color = config.color;
   document.getElementById('wordDetailFact').textContent = word.fact;
 
-  // Generate URL for this specific word
+  // Generate URL
   const baseUrl = getBaseUrl();
   const wordUrl = `${baseUrl}/?world=${currentWorld}&word=${currentIndex}`;
   document.getElementById('wordDetailUrl').textContent = wordUrl;
 
-  // Generate quiz for detail page
-  generateDetailQuiz();
+  // Initialize all 3 games for detail page
+  renderQuiz('detailQuizOptions', 'detailQuizResult', 'detailQuizQuestion');
+  renderMemoryGame('memoryGrid', 'memoryStats', 'memoryResult', false);
+  renderSpellingGame('spellingSlots', 'spellingLetters', 'spellingHint', 'spellingResult', false);
 
-  // Generate word game for detail page
-  generateDetailWordGame();
+  // Reset to Quiz tab
+  switchGameTab('quiz');
 
   window.scrollTo(0, 0);
 
-  // Update URL without reloading
   const newUrl = `${window.location.pathname}?world=${currentWorld}&word=${currentIndex}`;
   history.pushState({world: currentWorld, word: currentIndex}, '', newUrl);
 }
 
+function switchGameTab(tabName) {
+  // Update tabs
+  document.querySelectorAll('#wordDetailPage .game-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+
+  // Update panels
+  document.querySelectorAll('#wordDetailPage .game-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(tabName + 'Panel').classList.add('active');
+}
+
 function speakDetailWord(type) {
   const word = vocabData[currentWorld][currentIndex].en;
-  if (!window.speechSynthesis) {
-    alert('Sorry, your browser does not support speech.');
-    return;
-  }
+  if (!window.speechSynthesis) { alert('Sorry, speech not supported.'); return; }
   window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(word);
-  utterance.rate = type === 'slow' ? 0.5 : 1;
-  utterance.lang = type === 'british' ? 'en-GB' : 'en-US';
-  window.speechSynthesis.speak(utterance);
+  const u = new SpeechSynthesisUtterance(word);
+  u.rate = type === 'slow' ? 0.5 : 1;
+  u.lang = type === 'british' ? 'en-GB' : 'en-US';
+  window.speechSynthesis.speak(u);
 }
 
 function showDetailPrev() {
@@ -1278,129 +1309,6 @@ function showDetailNext() {
   if (currentIndex < vocabData[currentWorld].length - 1) {
     currentIndex++;
     showWordDetail();
-  }
-}
-
-// ==================== DETAIL PAGE QUIZ ====================
-
-function generateDetailQuiz() {
-  const word = vocabData[currentWorld][currentIndex];
-  const allWords = vocabData[currentWorld];
-  const correct = word.ar;
-  const distractors = [];
-  const used = new Set([currentIndex]);
-
-  while (distractors.length < 3 && used.size < allWords.length) {
-    const idx = Math.floor(Math.random() * allWords.length);
-    if (!used.has(idx)) {
-      used.add(idx);
-      distractors.push(allWords[idx].ar);
-    }
-  }
-
-  const options = [correct, ...distractors].sort(() => Math.random() - 0.5);
-  const correctIndex = options.indexOf(correct);
-
-  document.getElementById('detailQuizQuestion').textContent = `What is the meaning of "${word.en}"?`;
-
-  let html = '';
-  options.forEach((opt, i) => {
-    html += `<button class="quiz-option" id="detailQuizOpt${i}" onclick="selectDetailQuiz(${i}, ${correctIndex})">${opt}</button>`;
-  });
-  document.getElementById('detailQuizOptions').innerHTML = html;
-  document.getElementById('detailQuizResult').innerHTML = '';
-}
-
-function selectDetailQuiz(selectedIndex, correctIndex) {
-  const correct = selectedIndex === correctIndex;
-  const options = document.getElementById('detailQuizOptions').children;
-
-  for (let i = 0; i < options.length; i++) {
-    options[i].disabled = true;
-    if (i === correctIndex) {
-      options[i].classList.add('correct');
-    } else if (i === selectedIndex && !correct) {
-      options[i].classList.add('wrong');
-    }
-  }
-
-  const resultDiv = document.getElementById('detailQuizResult');
-  if (correct) {
-    resultDiv.innerHTML = '<div class="quiz-result" style="background: #dcfce7; color: #166534;">⭐ Great job! You earned a star! ⭐</div>';
-    if (!completed[currentWorld]) completed[currentWorld] = [];
-    if (!completed[currentWorld].includes(currentIndex)) {
-      completed[currentWorld].push(currentIndex);
-      stars++;
-      updateStars();
-      saveProgress();
-    }
-  } else {
-    resultDiv.innerHTML = '<div class="quiz-result" style="background: #fee2e2; color: #991b1b;">💪 Try again! Click "Next Word" and come back.</div>';
-  }
-}
-
-// ==================== DETAIL PAGE WORD GAME ====================
-
-function generateDetailWordGame() {
-  const game = generateWordGame(currentWorld, currentIndex);
-  currentWordGame = game;
-
-  const container = document.getElementById('detailWordGame');
-
-  let html = `<div class="word-game-desc">${game.description}</div>`;
-  html += `<div class="word-game-question">${game.question}</div>`;
-
-  if (game.hint) {
-    html += `<div class="word-game-hint">💡 Hint: ${game.hint}</div>`;
-  }
-
-  html += '<div class="word-game-options">';
-  game.options.forEach((opt, i) => {
-    html += `<button class="word-game-option" id="detailWgOpt${i}" onclick="selectDetailWordGame(${i})">${opt}</button>`;
-  });
-  html += '</div>';
-
-  html += '<div id="detailWordGameResult"></div>';
-
-  container.innerHTML = html;
-}
-
-function selectDetailWordGame(index) {
-  if (!currentWordGame) return;
-  const game = currentWordGame;
-  const selected = game.options[index];
-  const correct = selected === game.correct;
-
-  // Disable all options
-  game.options.forEach((_, i) => {
-    const btn = document.getElementById(`detailWgOpt${i}`);
-    if (btn) btn.disabled = true;
-  });
-
-  // Mark correct and wrong
-  game.options.forEach((opt, i) => {
-    const btn = document.getElementById(`detailWgOpt${i}`);
-    if (!btn) return;
-    if (opt === game.correct) {
-      btn.classList.add('correct');
-    } else if (i === index && !correct) {
-      btn.classList.add('wrong');
-    }
-  });
-
-  const resultDiv = document.getElementById('detailWordGameResult');
-  if (correct) {
-    resultDiv.innerHTML = '<div class="quiz-result" style="background: #dcfce7; color: #166534; margin-top: 16px;">🎉 Correct! Well done!</div>';
-
-    if (!completed[currentWorld]) completed[currentWorld] = [];
-    if (!completed[currentWorld].includes(currentIndex)) {
-      completed[currentWorld].push(currentIndex);
-      stars++;
-      updateStars();
-      saveProgress();
-    }
-  } else {
-    resultDiv.innerHTML = '<div class="quiz-result" style="background: #fee2e2; color: #991b1b; margin-top: 16px;">💪 Not quite! The correct answer is highlighted.</div>';
   }
 }
 
@@ -1448,7 +1356,6 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 
 // ==================== INITIALIZATION ====================
 
-// Handle browser back/forward
 window.addEventListener('popstate', function(event) {
   if (event.state && event.state.world && event.state.word !== undefined) {
     currentWorld = event.state.world;
@@ -1459,11 +1366,8 @@ window.addEventListener('popstate', function(event) {
   }
 });
 
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
   updateStars();
-
-  // Check URL parameters
   if (!handleUrlParams()) {
     showHome();
   }
