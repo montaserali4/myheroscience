@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyHeroScience — Learn Science in English</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Nunito', sans-serif; background: #f8fafc; color: #1e293b; }
+
+        /* Navigation */
+        .nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; z-index: 1000; }
+        .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .logo { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 900; color: #1e40af; text-decoration: none; }
+        .logo-icon { font-size: 24px; }
+        .stars-badge { display: flex; align-items: center; gap: 4px; background: #fef3c7; padding: 6px 12px; border-radius: 20px; font-weight: 700; color: #b45309; }
+
+        /* Hero */
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%); padding-top: 64px; text-align: center; position: relative; overflow: hidden; }
+        .hero-shapes { position: absolute; inset: 0; pointer-events: none; }
+        .shape { position: absolute; border-radius: 50%; opacity: 0.08; }
+        .hero-content { position: relative; z-index: 1; max-width: 700px; padding: 40px 20px; }
+        .hero-title { font-size: 48px; font-weight: 900; color: #1e40af; margin-bottom: 16px; letter-spacing: 4px; }
+        .hero-subtitle { font-size: 32px; font-weight: 800; color: #1e293b; margin-bottom: 16px; }
+        .hero-desc { font-size: 18px; color: #64748b; margin-bottom: 32px; line-height: 1.6; }
+        .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: #2563eb; color: white; padding: 16px 32px; border-radius: 50px; font-size: 18px; font-weight: 700; text-decoration: none; border: none; cursor: pointer; transition: all 0.2s; box-shadow: 0 10px 30px rgba(37,99,235,0.3); }
+        .btn-primary:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 15px 40px rgba(37,99,235,0.4); }
+
+        /* Worlds Section */
+        .section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
+        .section-title { text-align: center; font-size: 36px; font-weight: 900; margin-bottom: 12px; }
+        .section-desc { text-align: center; font-size: 18px; color: #64748b; margin-bottom: 48px; }
+        .worlds-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+        .world-card { background: white; border-radius: 24px; padding: 24px; border: 2px solid; cursor: pointer; transition: all 0.3s; text-decoration: none; color: inherit; display: block; }
+        .world-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .world-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 16px; }
+        .world-title { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+        .world-subtitle { font-size: 14px; color: #94a3b8; margin-bottom: 8px; }
+        .world-desc { font-size: 14px; color: #64748b; margin-bottom: 16px; line-height: 1.5; }
+        .world-footer { display: flex; align-items: center; justify-content: space-between; }
+        .world-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+        .world-arrow { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+
+        /* Vocabulary Page */
+        .vocab-page { display: none; min-height: 100vh; padding-top: 80px; padding-bottom: 40px; }
+        .vocab-page.active { display: block; }
+        .vocab-header { text-align: center; margin-bottom: 24px; }
+        .vocab-title { font-size: 32px; font-weight: 900; }
+        .vocab-subtitle { color: #94a3b8; }
+        .back-btn { display: inline-flex; align-items: center; gap: 6px; color: #64748b; text-decoration: none; font-weight: 600; margin-bottom: 16px; }
+        .back-btn:hover { color: #2563eb; }
+
+        /* Progress */
+        .progress-bar { max-width: 500px; margin: 0 auto 24px; }
+        .progress-labels { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: #64748b; margin-bottom: 8px; }
+        .progress-track { height: 12px; background: #e2e8f0; border-radius: 6px; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; background-size: 20px 20px; background-image: linear-gradient(45deg, rgba(255,255,255,0.2) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.2) 75%, transparent 75%, transparent); }
+
+        /* Word Card */
+        .word-card { max-width: 600px; margin: 0 auto; background: white; border-radius: 32px; padding: 48px 32px; border: 2px solid; text-align: center; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.08); }
+        .word-starred { position: absolute; top: 20px; right: 20px; font-size: 32px; }
+        .word-english { font-size: 56px; font-weight: 900; color: #1e293b; margin-bottom: 8px; }
+        .word-phonetic { font-size: 20px; color: #94a3b8; font-family: monospace; margin-bottom: 24px; }
+        .translate-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 50px; color: white; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; }
+        .translate-btn:hover { transform: scale(1.05); }
+        .translate-reveal { animation: reveal 0.4s ease; }
+        @keyframes reveal { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .arabic-meaning { display: inline-block; padding: 14px 28px; border-radius: 16px; font-size: 28px; font-weight: 800; }
+
+        /* Audio Buttons */
+        .audio-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 24px; }
+        .audio-btn { display: flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 50px; background: #f1f5f9; color: #475569; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
+        .audio-btn:hover { background: #e2e8f0; }
+        .audio-btn.playing { animation: pulse 1s infinite; color: white; }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        /* Action Buttons */
+        .action-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 24px; }
+        .action-btn { display: flex; align-items: center; gap: 6px; padding: 12px 20px; border-radius: 50px; border: 2px solid #e2e8f0; background: white; color: #475569; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .action-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+
+        /* Navigation Buttons */
+        .nav-row { display: flex; justify-content: space-between; max-width: 600px; margin: 24px auto 0; padding: 0 16px; }
+        .nav-btn { display: flex; align-items: center; gap: 6px; padding: 12px 24px; border-radius: 50px; background: white; border: none; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .nav-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+        .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        /* Dots */
+        .dots-row { display: flex; justify-content: center; gap: 6px; margin-top: 24px; flex-wrap: wrap; padding: 0 20px; }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; border: none; cursor: pointer; transition: all 0.3s; }
+        .dot.active { width: 24px; background: #2563eb; }
+        .dot.starred { background: #fbbf24; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: 24px; padding: 32px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .modal-title { font-size: 20px; font-weight: 800; }
+        .modal-close { width: 100%; margin-top: 20px; padding: 14px; border-radius: 16px; border: none; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+
+        /* Quiz Options */
+        .quiz-options { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+        .quiz-option { padding: 16px; border-radius: 16px; border: 2px solid #e2e8f0; background: white; font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: right; }
+        .quiz-option:hover:not(:disabled) { border-color: #93c5fd; background: #eff6ff; }
+        .quiz-option:disabled { cursor: default; }
+        .quiz-option.correct { border-color: #22c55e; background: #f0fdf4; color: #15803d; box-shadow: 0 0 20px rgba(34,197,94,0.3); }
+        .quiz-option.wrong { border-color: #ef4444; background: #fef2f2; color: #b91c1c; animation: shake 0.5s; }
+        @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+        .quiz-result { margin-top: 16px; padding: 16px; border-radius: 16px; text-align: center; font-weight: 700; font-size: 18px; }
+
+        /* Footer */
+        .footer { background: #0f172a; color: white; padding: 60px 20px 30px; }
+        .footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
+        .footer-logo { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 900; margin-bottom: 12px; }
+        .footer-text { color: #94a3b8; font-size: 14px; line-height: 1.6; }
+        .footer-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { color: #94a3b8; text-decoration: none; font-size: 14px; }
+        .footer-links a:hover { color: white; }
+        .footer-bottom { text-align: center; color: #64748b; font-size: 13px; margin-top: 40px; padding-top: 20px; border-top: 1px solid #1e293b; }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero-title { font-size: 36px; }
+            .hero-subtitle { font-size: 24px; }
+            .word-english { font-size: 40px; }
+            .section { padding: 60px 16px; }
+            .word-card { padding: 32px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="#" class="logo" onclick="showHome(); return false;">
+                <span class="logo-icon">🚀</span>
+                <span>MyHeroScience</span>
+            </a>
+            <div class="stars-badge">
+                <span>⭐</span>
+                <span id="starCount">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Page -->
+    <div id="homePage">
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-shapes">
+                <div class="shape" style="width:100px;height:100px;background:#3b82f6;top:10%;left:10%"></div>
+                <div class="shape" style="width:80px;height:80px;background:#22c55e;top:20%;right:15%"></div>
+                <div class="shape" style="width:120px;height:120px;background:#f97316;bottom:20%;left:20%"></div>
+                <div class="shape" style="width:60px;height:60px;background:#ef4444;bottom:30%;right:10%"></div>
+            </div>
+            <div class="hero-content">
+                <div class="hero-title">SCIENCE HERO</div>
+                <h1 class="hero-subtitle">Learn Science in English</h1>
+                <p class="hero-desc">Discover 200+ science words with pronunciation, quizzes, and fun games. Start your adventure with Adam the Science Hero!</p>
+                <a href="#worlds" class="btn-primary" onclick="scrollToWorlds(); return false;">
+                    Start Your Science Journey →
+                </a>
+            </div>
+        </section>
+
+        <!-- Worlds -->
+        <section id="worlds" class="section">
+            <h2 class="section-title">🌍 Learning Worlds</h2>
+            <p class="section-desc">Choose a world and start learning science vocabulary in English!</p>
+            <div class="worlds-grid">
+                <div class="world-card" style="border-color: #bbf7d0; background: #f0fdf4;" onclick="showWorld('plants')">
+                    <div class="world-icon" style="background: #dcfce7;">🌿</div>
+                    <div class="world-title">Plants World</div>
+                    <div class="world-subtitle">Plants World</div>
+                    <div class="world-desc">Discover the amazing world of plants from tiny seeds to giant trees</div>
+                    <div class="world-footer">
+                        <span class="world-badge" style="background: #dcfce7; color: #166534;">50 Words</span>
+                        <span class="world-arrow" style="background: #22c55e;">→</span>
+                    </div>
+                </div>
+
+                <div class="world-card" style="border-color: #fed7aa; background: #fff7ed;" onclick="showWorld('animals')">
+                    <div class="world-icon" style="background: #ffedd5;">🦁</div>
+                    <div class="world-title">Animals World</div>
+                    <div class="world-subtitle">Animals World</div>
+                    <div class="world-desc">Learn about wild and sea animals and their exciting world</div>
+                    <div class="world-footer">
+                        <span class="world-badge" style="background: #ffedd5; color: #9a3412;">50 Words</span>
+                        <span class="world-arrow" style="background: #f97316;">→</span>
+                    </div>
+                </div>
+
+                <div class="world-card" style="border-color: #bfdbfe; background: #eff6ff;" onclick="showWorld('earth-space')">
+                    <div class="world-icon" style="background: #dbeafe;">🌍</div>
+                    <div class="world-title">Earth & Space</div>
+                    <div class="world-subtitle">Earth & Space World</div>
+                    <div class="world-desc">An exciting journey to outer space and the secrets of planet Earth</div>
+                    <div class="world-footer">
+                        <span class="world-badge" style="background: #dbeafe; color: #1e40af;">50 Words</span>
+                        <span class="world-arrow" style="background: #3b82f6;">→</span>
+                    </div>
+                </div>
+
+                <div class="world-card" style="border-color: #fecaca; background: #fef2f2;" onclick="showWorld('human-body')">
+                    <div class="world-icon" style="background: #fee2e2;">❤️</div>
+                    <div class="world-title">Human Body</div>
+                    <div class="world-subtitle">Human Body World</div>
+                    <div class="world-desc">Discover the secrets of your body and how it works from the inside</div>
+                    <div class="world-footer">
+                        <span class="world-badge" style="background: #fee2e2; color: #991b1b;">50 Words</span>
+                        <span class="world-arrow" style="background: #ef4444;">→</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Adam -->
+        <section class="section" style="background: linear-gradient(180deg, #eff6ff 0%, #ffffff 100%);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 48px; align-items: center;">
+                <div style="text-align: center;">
+                    <div style="width: 280px; height: 280px; margin: 0 auto; background: linear-gradient(135deg, #60a5fa, #2563eb); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 120px; box-shadow: 0 20px 60px rgba(37,99,235,0.3); position: relative;">
+                        🧑‍🔬
+                        <div style="position: absolute; top: -10px; right: -10px; background: #fbbf24; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">⭐</div>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="section-title" style="text-align: left;">Who is Adam?</h2>
+                    <p style="font-size: 18px; color: #64748b; line-height: 1.7; margin-bottom: 32px;">
+                        Adam is your science hero! He helps you on your journey to learn science in English. With Adam, you will discover the worlds of plants, animals, space, and the human body. The more you learn, the more stars you collect!
+                    </p>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                        <div style="background: white; border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                            <div style="font-size: 24px; margin-bottom: 8px;">📚</div>
+                            <div style="font-size: 28px; font-weight: 900;">200+</div>
+                            <div style="font-size: 14px; color: #94a3b8;">Words</div>
+                        </div>
+                        <div style="background: white; border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                            <div style="font-size: 24px; margin-bottom: 8px;">🌍</div>
+                            <div style="font-size: 28px; font-weight: 900;">4</div>
+                            <div style="font-size: 14px; color: #94a3b8;">Worlds</div>
+                        </div>
+                        <div style="background: white; border-radius: 20px; padding: 20px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                            <div style="font-size: 24px; margin-bottom: 8px;">🏆</div>
+                            <div style="font-size: 28px; font-weight: 900;">∞</div>
+                            <div style="font-size: 14px; color: #94a3b8;">Fun</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- For Parents -->
+        <section class="section">
+            <h2 class="section-title">For Parents</h2>
+            <p class="section-desc">Everything you need to support your child's science learning journey.</p>
+            <div class="worlds-grid">
+                <div style="background: #f0fdf4; border-radius: 24px; padding: 32px; border: 2px solid #bbf7d0;">
+                    <div style="width: 48px; height: 48px; background: #dcfce7; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px;">📈</div>
+                    <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 8px;">Track Progress</h3>
+                    <p style="color: #64748b; font-size: 15px; line-height: 1.6;">Follow your child's learning progress, acquired words, and collected stars.</p>
+                </div>
+                <div style="background: #eff6ff; border-radius: 24px; padding: 32px; border: 2px solid #bfdbfe;">
+                    <div style="width: 48px; height: 48px; background: #dbeafe; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px;">🔊</div>
+                    <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 8px;">Correct Pronunciation</h3>
+                    <p style="color: #64748b; font-size: 15px; line-height: 1.6;">British and American correct pronunciation for every word.</p>
+                </div>
+                <div style="background: #fff7ed; border-radius: 24px; padding: 32px; border: 2px solid #fed7aa;">
+                    <div style="width: 48px; height: 48px; background: #ffedd5; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px;">🎮</div>
+                    <h3 style="font-size: 20px; font-weight: 800; margin-bottom: 8px;">Fun Learning</h3>
+                    <p style="color: #64748b; font-size: 15px; line-height: 1.6;">Interactive games and quizzes that make learning fun.</p>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="#" class="btn-primary" onclick="showWorld('plants'); return false;">Start Now for Free →</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Vocabulary Page -->
+    <div id="vocabPage" class="vocab-page">
+        <div class="section" style="max-width: 700px;">
+            <a href="#" class="back-btn" onclick="showHome(); return false;">← Back to Worlds</a>
+            <div class="vocab-header">
+                <h1 class="vocab-title" id="worldTitle">Plants World</h1>
+                <p class="vocab-subtitle" id="worldSubtitle">Plants World</p>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-labels">
+                    <span id="progressLabel">Word 1 of 50</span>
+                    <span id="progressPercent">2%</span>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill" style="width: 2%; background: #22c55e;"></div>
+                </div>
+            </div>
+
+            <div class="word-card" id="wordCard" style="border-color: #bbf7d0;">
+                <div class="word-starred" id="wordStarred" style="display: none;">⭐</div>
+                <div class="word-english" id="wordEnglish">Seed</div>
+                <div class="word-phonetic" id="wordPhonetic">/siːd/</div>
+
+                <div id="translateSection">
+                    <button class="translate-btn" id="translateBtn" style="background: #22c55e;" onclick="toggleTranslation()">
+                        📖 Translate
+                    </button>
+                </div>
+                <div id="arabicSection" style="display: none;">
+                    <div class="arabic-meaning translate-reveal" id="arabicMeaning" style="background: #f0fdf4; color: #166534;">بذرة</div>
+                </div>
+
+                <div class="audio-row">
+                    <button class="audio-btn" onclick="speakWord('normal')">🔊 Normal</button>
+                    <button class="audio-btn" onclick="speakWord('slow')">🐢 Slow</button>
+                    <button class="audio-btn" onclick="speakWord('american')">🇺🇸 American</button>
+                    <button class="audio-btn" onclick="speakWord('british')">🇬🇧 British</button>
+                </div>
+
+                <div class="action-row">
+                    <button class="action-btn" onclick="showFact()">💡 Did You Know?</button>
+                    <button class="action-btn" onclick="showQuiz()">⭐ Quiz</button>
+                    <button class="action-btn" onclick="showGame()">🎮 Game</button>
+                </div>
+            </div>
+
+            <div class="nav-row">
+                <button class="nav-btn" id="prevBtn" onclick="prevWord()">← Previous</button>
+                <button class="nav-btn" id="nextBtn" onclick="nextWord()">Next →</button>
+            </div>
+
+            <div class="dots-row" id="dotsRow"></div>
+        </div>
+    </div>
+
+    <!-- Fact Modal -->
+    <div class="modal-overlay" id="factModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span style="font-size: 28px;">💡</span>
+                <span class="modal-title">Did You Know? 🤔</span>
+            </div>
+            <div style="font-size: 24px; font-weight: 800; margin-bottom: 12px;" id="factWord">Seed</div>
+            <p style="font-size: 18px; color: #64748b; line-height: 1.6;" id="factText">A seed contains a tiny baby plant inside it!</p>
+            <button class="modal-close" style="background: #2563eb; color: white;" onclick="closeModal('factModal')">Awesome!</button>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div class="modal-overlay" id="quizModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span style="font-size: 28px;">⭐</span>
+                <span class="modal-title">Test Yourself! ⭐</span>
+            </div>
+            <p style="font-size: 18px; font-weight: 700; margin-bottom: 16px;" id="quizQuestion">What is the meaning of "Seed"?</p>
+            <div class="quiz-options" id="quizOptions"></div>
+            <div id="quizResult"></div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="modal-close" style="background: #f97316; color: white; flex: 1; display: none;" id="retryBtn" onclick="generateQuiz()">🔄 Try Again</button>
+                <button class="modal-close" style="background: #e2e8f0; color: #475569; flex: 1;" onclick="closeModal('quizModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div class="modal-overlay" id="gameModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span style="font-size: 28px;">🎮</span>
+                <span class="modal-title">Mini Game</span>
+            </div>
+            <p style="text-align: center; color: #64748b; margin-bottom: 20px;" id="gameDesc">Help Adam assemble the plant parts!</p>
+            <div style="text-align: center; font-size: 48px; margin-bottom: 20px;">🎮</div>
+            <div style="background: #f1f5f9; border-radius: 20px; padding: 40px; text-align: center; color: #94a3b8; font-size: 18px;">
+                Game coming soon!
+            </div>
+            <button class="modal-close" style="background: #22c55e; color: white;" onclick="closeModal('gameModal')">Close</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer" id="mainFooter">
+        <div class="footer-inner">
+            <div>
+                <div class="footer-logo">
+                    <span>🚀</span>
+                    <span>MyHeroScience</span>
+                </div>
+                <p class="footer-text">A bilingual educational platform for learning science vocabulary in English in a fun and interactive way.</p>
+            </div>
+            <div>
+                <div class="footer-title">Quick Links</div>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="showHome(); return false;">Home</a></li>
+                    <li><a href="#" onclick="scrollToWorlds(); return false;">Learning Worlds</a></li>
+                    <li><a href="#" onclick="showHome(); return false;">About Adam</a></li>
+                    <li><a href="#" onclick="showHome(); return false;">For Parents</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-title">Worlds</div>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="showWorld('plants'); return false;">Plants</a></li>
+                    <li><a href="#" onclick="showWorld('animals'); return false;">Animals</a></li>
+                    <li><a href="#" onclick="showWorld('earth-space'); return false;">Earth & Space</a></li>
+                    <li><a href="#" onclick="showWorld('human-body'); return false;">Human Body</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>support@myheroscience.com</p>
+            <p style="margin-top: 8px;">© 2025 MyHeroScience.com — All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+
+// Vocabulary Data
+const vocabData = {
+  plants: [
+    {id:1, en:"Seed", ar:"بذرة", ph:"/siːd/", fact:"A seed contains a tiny baby plant inside it!"},
+    {id:2, en:"Root", ar:"جذر", ph:"/ruːt/", fact:"Roots can stretch very far underground!"},
+    {id:3, en:"Stem", ar:"ساق", ph:"/stem/", fact:"The stem carries water and food to all parts of the plant."},
+    {id:4, en:"Leaf", ar:"ورقة", ph:"/liːf/", fact:"Leaves are the plant's kitchen where food is made!"},
+    {id:5, en:"Flower", ar:"زهرة", ph:"/ˈflaʊ.ər/", fact:"Flowers have bright colors to attract insects!"},
+    {id:6, en:"Fruit", ar:"ثمرة", ph:"/fruːt/", fact:"Fruit contains new seeds for the plant."},
+    {id:7, en:"Tree", ar:"شجرة", ph:"/triː/", fact:"Some trees can live for thousands of years!"},
+    {id:8, en:"Branch", ar:"فرع", ph:"/bræntʃ/", fact:"Branches hold the leaves and fruits."},
+    {id:9, en:"Petal", ar:"بتلة", ph:"/ˈpet.əl/", fact:"Flower petals protect the inner parts of the flower."},
+    {id:10, en:"Soil", ar:"تربة", ph:"/sɔɪl/", fact:"Good soil is rich in nutrients."},
+    {id:11, en:"Water", ar:"ماء", ph:"/ˈwɔː.tər/", fact:"Plants need water to grow and live."},
+    {id:12, en:"Sunlight", ar:"ضوء الشمس", ph:"/ˈsʌn.laɪt/", fact:"Plants need sunlight to make their food!"},
+    {id:13, en:"Photosynthesis", ar:"البناء الضوئي", ph:"/ˌfəʊ.təʊˈsɪn.θə.sɪs/", fact:"Plants make their food from sunlight!"},
+    {id:14, en:"Chlorophyll", ar:"الكلوروفيل", ph:"/ˈklɔː.rə.fɪl/", fact:"Chlorophyll is the green substance in leaves."},
+    {id:15, en:"Bud", ar:"برعم", ph:"/bʌd/", fact:"A bud turns into a beautiful flower when it grows."},
+    {id:16, en:"Pollen", ar:"حبوب اللقاح", ph:"/ˈpɒl.ən/", fact:"Pollen helps form fruits."},
+    {id:17, en:"Sprout", ar:"نبتة صغيرة", ph:"/spraʊt/", fact:"A sprout is the beginning of a new plant's life."},
+    {id:18, en:"Garden", ar:"حديقة", ph:"/ˈɡɑː.dən/", fact:"A garden is a beautiful place to grow plants."},
+    {id:19, en:"Grass", ar:"عشب", ph:"/ɡrɑːs/", fact:"Grass covers the ground and protects the soil."},
+    {id:20, en:"Bush", ar:"شجيرة", ph:"/bʊʃ/", fact:"Bushes are smaller than trees and have many branches."},
+    {id:21, en:"Thorn", ar:"شوكة", ph:"/θɔːn/", fact:"Some plants have thorns for protection."},
+    {id:22, en:"Vine", ar:"كرمة", ph:"/vaɪn/", fact:"Vines climb on walls and trees."},
+    {id:23, en:"Cactus", ar:"صبار", ph:"/ˈkæk.təs/", fact:"Cactus grows in the desert and stores water."},
+    {id:24, en:"Fern", ar:"سرخس", ph:"/fɜːn/", fact:"Ferns are among the oldest plants on Earth!"},
+    {id:25, en:"Moss", ar:"طحلب", ph:"/mɒs/", fact:"Moss grows in damp and shady places."},
+    {id:26, en:"Bark", ar:"لحاء", ph:"/bɑːk/", fact:"Bark protects the tree trunk from insects."},
+    {id:27, en:"Sap", ar:"عصارة", ph:"/sæp/", fact:"Sap is the liquid that carries food in the plant."},
+    {id:28, en:"Seedling", ar:"شتلة", ph:"/ˈsiːd.lɪŋ/", fact:"A seedling is a small plant that just started growing."},
+    {id:29, en:"Prune", ar:"تقليم", ph:"/pruːn/", fact:"Pruning helps the plant grow better."},
+    {id:30, en:"Pollinate", ar:"تلقيح", ph:"/ˈpɒl.ə.neɪt/", fact:"Bees help pollinate flowers!"},
+    {id:31, en:"Evergreen", ar:"دائم الخضرة", ph:"/ˈev.ə.ɡriːn/", fact:"Evergreen trees keep their leaves all year round."},
+    {id:32, en:"Deciduous", ar:"موسمي", ph:"/dɪˈsɪdʒ.u.əs/", fact:"Deciduous trees drop their leaves in autumn."},
+    {id:33, en:"Germinate", ar:"إنبات", ph:"/ˈdʒɜː.mɪ.neɪt/", fact:"Germination is the start of a seed's growth."},
+    {id:34, en:"Nutrient", ar:"مغذٍ", ph:"/ˈnuː.tri.ənt/", fact:"Plants need nutrients from the soil to grow."},
+    {id:35, en:"Drought", ar:"جفاف", ph:"/draʊt/", fact:"Drought happens when it doesn't rain for a long time."},
+    {id:36, en:"Harvest", ar:"حصاد", ph:"/ˈhɑː.vɪst/", fact:"Harvest is when we gather fruits and crops."},
+    {id:37, en:"Fertilizer", ar:"سماد", ph:"/ˈfɜː.tɪ.laɪ.zər/", fact:"Fertilizer feeds the soil for plants."},
+    {id:38, en:"Compost", ar:"سماد عضوي", ph:"/ˈkɒm.pɒst/", fact:"Compost is made from plant leftovers."},
+    {id:39, en:"Greenhouse", ar:"بيت زجاجي", ph:"/ˈɡriːn.haʊs/", fact:"A greenhouse keeps plants warm."},
+    {id:40, en:"Herb", ar:"عشب طبي", ph:"/hɜːb/", fact:"Herbs have been used in medicine since ancient times."},
+    {id:41, en:"Shrub", ar:"شجيرة", ph:"/ʃrʌb/", fact:"Shrubs are low and have many branches."},
+    {id:42, en:"Root system", ar:"نظام جذري", ph:"/ruːt ˈsɪs.təm/", fact:"Roots form a network underground!"},
+    {id:43, en:"Oxygen", ar:"أكسجين", ph:"/ˈɒk.sɪ.dʒən/", fact:"Plants make the oxygen we breathe!"},
+    {id:44, en:"Carbon Dioxide", ar:"ثاني أكسيد الكربون", ph:"/ˈkɑː.bən daɪˈɒk.saɪd/", fact:"Plants absorb carbon dioxide gas."},
+    {id:45, en:"Ecosystem", ar:"نظام بيئي", ph:"/ˈiː.kəʊˌsɪs.təm/", fact:"Plants are an essential part of any ecosystem."},
+    {id:46, en:"Biome", ar:"بيئة حيوية", ph:"/ˈbaɪ.əʊm/", fact:"Forests and deserts are types of biomes."},
+    {id:47, en:"Tropism", ar:"استجابة", ph:"/ˈtrɒp.ɪz.əm/", fact:"Plants move toward light to grow!"},
+    {id:48, en:"Xylem", ar:"الخشب", ph:"/ˈzaɪ.ləm/", fact:"Xylem carries water from roots to leaves."},
+    {id:49, en:"Phloem", ar:"اللحاء", ph:"/ˈfləʊ.em/", fact:"Phloem carries food to all parts of the plant."},
+    {id:50, en:"Erosion", ar:"تآكل", ph:"/ɪˈrəʊ.ʒən/", fact:"Plant roots protect soil from erosion!"}
+  ],
+  animals: [
+    {id:1, en:"Lion", ar:"أسد", ph:"/ˈlaɪ.ən/", fact:"The lion is the king of the jungle and lives in groups called prides!"},
+    {id:2, en:"Elephant", ar:"فيل", ph:"/ˈel.ɪ.fənt/", fact:"The elephant is the largest land animal!"},
+    {id:3, en:"Tiger", ar:"نمر", ph:"/ˈtaɪ.ɡər/", fact:"The tiger is very strong and can jump 5 meters!"},
+    {id:4, en:"Giraffe", ar:"زرافة", ph:"/dʒɪˈrɑːf/", fact:"The giraffe is the tallest animal on Earth thanks to its long neck."},
+    {id:5, en:"Zebra", ar:"حمار وحشي", ph:"/ˈzeb.rə/", fact:"Each zebra has unique stripes that never repeat!"},
+    {id:6, en:"Monkey", ar:"قرد", ph:"/ˈmʌŋ.ki/", fact:"Monkeys are very smart and use tools to gather food!"},
+    {id:7, en:"Penguin", ar:"بطريق", ph:"/ˈpeŋ.ɡwɪn/", fact:"Penguins can't fly but they are excellent swimmers!"},
+    {id:8, en:"Dolphin", ar:"دلفين", ph:"/ˈdɒl.fɪn/", fact:"Dolphins are among the smartest sea animals!"},
+    {id:9, en:"Eagle", ar:"نسر", ph:"/ˈiː.ɡəl/", fact:"An eagle can spot a mouse from a kilometer high!"},
+    {id:10, en:"Bear", ar:"دب", ph:"/beər/", fact:"Bears sleep for 7 months during winter!"},
+    {id:11, en:"Shark", ar:"قرش", ph:"/ʃɑːk/", fact:"A shark can smell blood from far away!"},
+    {id:12, en:"Snake", ar:"ثعبان", ph:"/sneɪk/", fact:"Some snakes can flick their tongue 150 times per minute!"},
+    {id:13, en:"Frog", ar:"ضفدع", ph:"/frɒɡ/", fact:"A frog starts its life in water as a tadpole!"},
+    {id:14, en:"Butterfly", ar:"فراشة", ph:"/ˈbʌt.ə.flaɪ/", fact:"A butterfly tastes food with its feet!"},
+    {id:15, en:"Bee", ar:"نحلة", ph:"/biː/", fact:"A bee flaps its wings 200 times per second!"},
+    {id:16, en:"Ant", ar:"نملة", ph:"/ænt/", fact:"An ant can carry 50 times its own weight!"},
+    {id:17, en:"Spider", ar:"عنكبوت", ph:"/ˈspaɪ.dər/", fact:"Spider silk is stronger than steel!"},
+    {id:18, en:"Horse", ar:"حصان", ph:"/hɔːs/", fact:"A horse can sleep standing up!"},
+    {id:19, en:"Camel", ar:"جمل", ph:"/ˈkæm.əl/", fact:"A camel can go without water for two weeks!"},
+    {id:20, en:"Kangaroo", ar:"كنغر", ph:"/ˌkæŋ.ɡəˈruː/", fact:"A kangaroo cannot walk backward!"},
+    {id:21, en:"Owl", ar:"بومة", ph:"/aʊl/", fact:"An owl can turn its head 270 degrees!"},
+    {id:22, en:"Whale", ar:"حوت", ph:"/weɪl/", fact:"The blue whale is the largest animal on Earth!"},
+    {id:23, en:"Turtle", ar:"سلحفاة", ph:"/ˈtɜː.təl/", fact:"A turtle can pull its head inside its shell."},
+    {id:24, en:"Fox", ar:"ثعلب", ph:"/fɒks/", fact:"The fox is very clever and can solve puzzles!"},
+    {id:25, en:"Wolf", ar:"ذئب", ph:"/wʊlf/", fact:"Wolves live in packs and communicate by howling."},
+    {id:26, en:"Cheetah", ar:"فهد", ph:"/ˈtʃiː.tə/", fact:"The cheetah is the fastest land animal, reaching 120 km/h!"},
+    {id:27, en:"Gorilla", ar:"غوريلا", ph:"/ɡəˈrɪl.ə/", fact:"Gorillas share 98% of their genes with humans!"},
+    {id:28, en:"Crocodile", ar:"تمساح", ph:"/ˈkrɒk.ə.daɪl/", fact:"Crocodiles have lived since the age of dinosaurs!"},
+    {id:29, en:"Deer", ar:"غزال", ph:"/dɪər/", fact:"A deer can jump up to 3 meters high!"},
+    {id:30, en:"Bat", ar:"خفاش", ph:"/bæt/", fact:"The bat is the only mammal that can fly!"},
+    {id:31, en:"Peacock", ar:"طاووس", ph:"/ˈpiː.kɒk/", fact:"A peacock spreads its beautiful tail to attract a mate!"},
+    {id:32, en:"Squirrel", ar:"سنجاب", ph:"/ˈskwɪr.əl/", fact:"A squirrel sometimes forgets where it buried its food!"},
+    {id:33, en:"Octopus", ar:"أخطبوط", ph:"/ˈɒk.tə.pəs/", fact:"An octopus has three hearts and blue blood!"},
+    {id:34, en:"Jellyfish", ar:"قنديل بحر", ph:"/ˈdʒel.i.fɪʃ/", fact:"A jellyfish has no brain, no heart, and no bones!"},
+    {id:35, en:"Flamingo", ar:"فلامنغو", ph:"/fləˈmɪŋ.ɡəʊ/", fact:"A flamingo stands on one leg when sleeping!"},
+    {id:36, en:"Koala", ar:"كوالا", ph:"/kəʊˈɑː.lə/", fact:"A koala sleeps 20 hours every day!"},
+    {id:37, en:"Panda", ar:"باندا", ph:"/ˈpæn.də/", fact:"A panda eats bamboo for 12 hours a day!"},
+    {id:38, en:"Rhino", ar:"وحيد القرن", ph:"/ˈraɪ.nəʊ/", fact:"A rhino can run at 55 km/h!"},
+    {id:39, en:"Seal", ar:"فقمة", ph:"/siːl/", fact:"A seal can hold its nose with its flippers!"},
+    {id:40, en:"Parrot", ar:"ببغاء", ph:"/ˈpær.ət/", fact:"A parrot can learn hundreds of words!"},
+    {id:41, en:"Hedgehog", ar:"قنفذ", ph:"/ˈhedʒ.hɒɡ/", fact:"A hedgehog has between 5,000 and 7,000 spines!"},
+    {id:42, en:"Otter", ar:"قضاعة", ph:"/ˈɒt.ər/", fact:"An otter carries a rock to break open shellfish!"},
+    {id:43, en:"Platypus", ar:"خلد الماء", ph:"/ˈplæt.ɪ.pəs/", fact:"A platypus lays eggs even though it's a mammal!"},
+    {id:44, en:"Armadillo", ar:"أرماديلو", ph:"/ˌɑː.məˈdɪl.əʊ/", fact:"An armadillo can hold its breath underwater for 6 minutes!"},
+    {id:45, en:"Chameleon", ar:"حرباء", ph:"/kəˈmiː.li.ən/", fact:"A chameleon can move its eyes in two different directions!"},
+    {id:46, en:"Sloth", ar:"كسلان", ph:"/sləʊθ/", fact:"A sloth moves very slowly and sleeps 15 hours!"},
+    {id:47, en:"Hippo", ar:"فرس النهر", ph:"/ˈhɪp.əʊ/", fact:"A hippo secretes pink sweat to protect its skin!"},
+    {id:48, en:"Mantis", ar:"فرس النبي", ph:"/ˈmæn.tɪs/", fact:"A mantis can rotate its head 180 degrees!"},
+    {id:49, en:"Beetle", ar:"خنفساء", ph:"/ˈbiː.təl/", fact:"A dung beetle can roll dung 50 times its weight!"},
+    {id:50, en:"Reindeer", ar:"رنة", ph:"/ˈreɪn.dɪər/", fact:"A reindeer can see ultraviolet light!"}
+  ],
+  "earth-space": [
+    {id:1, en:"Earth", ar:"الأرض", ph:"/ɜːθ/", fact:"Earth is the only known planet with life!"},
+    {id:2, en:"Sun", ar:"الشمس", ph:"/sʌn/", fact:"The Sun is our star and the source of all energy on Earth!"},
+    {id:3, en:"Moon", ar:"القمر", ph:"/muːn/", fact:"The Moon is a celestial body that orbits Earth."},
+    {id:4, en:"Star", ar:"نجم", ph:"/stɑːr/", fact:"Stars are huge balls of glowing gas!"},
+    {id:5, en:"Planet", ar:"كوكب", ph:"/ˈplæn.ɪt/", fact:"There are eight planets in our solar system."},
+    {id:6, en:"Galaxy", ar:"مجرة", ph:"/ˈɡæl.ək.si/", fact:"Our Milky Way galaxy contains 200 billion stars!"},
+    {id:7, en:"Comet", ar:"مذنب", ph:"/ˈkɒm.ɪt/", fact:"A comet is a ball of ice and dust with a long tail!"},
+    {id:8, en:"Asteroid", ar:"كويكب", ph:"/ˈæs.tər.ɔɪd/", fact:"Asteroids are space rocks that orbit the Sun."},
+    {id:9, en:"Meteor", ar:"نيزك", ph:"/ˈmiː.ti.ɔːr/", fact:"A meteor glows when it enters the atmosphere!"},
+    {id:10, en:"Solar System", ar:"النظام الشمسي", ph:"/ˈsəʊ.lər ˈsɪs.təm/", fact:"Our solar system is 4.6 billion years old!"},
+    {id:11, en:"Orbit", ar:"مدار", ph:"/ˈɔː.bɪt/", fact:"Earth orbits around the Sun in its path."},
+    {id:12, en:"Eclipse", ar:"كسوف", ph:"/ɪˈklɪps/", fact:"An eclipse happens when the Moon blocks the Sun's light."},
+    {id:13, en:"Gravity", ar:"جاذبية", ph:"/ˈɡræv.ɪ.ti/", fact:"Gravity keeps us standing on Earth!"},
+    {id:14, en:"Atmosphere", ar:"الغلاف الجوي", ph:"/ˈæt.mə.sfɪər/", fact:"The atmosphere protects us from harmful rays."},
+    {id:15, en:"Volcano", ar:"بركان", ph:"/vɒlˈkeɪ.nəʊ/", fact:"A volcano erupts lava from inside Earth!"},
+    {id:16, en:"Earthquake", ar:"زلزال", ph:"/ˈɜːθ.kweɪk/", fact:"Earthquakes happen because of tectonic plate movement."},
+    {id:17, en:"Ocean", ar:"محيط", ph:"/ˈəʊ.ʃən/", fact:"The Pacific Ocean is the largest on Earth."},
+    {id:18, en:"Mountain", ar:"جبل", ph:"/ˈmaʊn.tɪn/", fact:"Mount Everest is the highest mountain in the world!"},
+    {id:19, en:"Desert", ar:"صحراء", ph:"/ˈdez.ət/", fact:"The Sahara is the largest hot desert in the world."},
+    {id:20, en:"Rainforest", ar:"غابة مطيرة", ph:"/ˈreɪnˌfɒr.ɪst/", fact:"The Amazon is the largest rainforest in the world!"},
+    {id:21, en:"River", ar:"نهر", ph:"/ˈrɪv.ər/", fact:"The Nile is the longest river in the world!"},
+    {id:22, en:"Lake", ar:"بحيرة", ph:"/leɪk/", fact:"Lake Baikal is the deepest lake in the world!"},
+    {id:23, en:"Glacier", ar:"نهر جليدي", ph:"/ˈɡlæs.i.ər/", fact:"Glaciers contain 75% of fresh water."},
+    {id:24, en:"Tornado", ar:"إعصار", ph:"/tɔːˈneɪ.dəʊ/", fact:"A tornado has winds that spin at incredible speed!"},
+    {id:25, en:"Tsunami", ar:"تسونامي", ph:"/tsuːˈnɑː.mi/", fact:"A tsunami is a huge ocean wave!"},
+    {id:26, en:"Hurricane", ar:"إعصار استوائي", ph:"/ˈhʌr.ɪ.kən/", fact:"A hurricane has an eye in its center!"},
+    {id:27, en:"Fossil", ar:"حفرية", ph:"/ˈfɒs.əl/", fact:"Fossils are traces of creatures that lived millions of years ago!"},
+    {id:28, en:"Lava", ar:"حمم", ph:"/ˈlɑː.və/", fact:"Volcanic lava is very hot, reaching 1200 degrees!"},
+    {id:29, en:"Crust", ar:"القشرة", ph:"/krʌst/", fact:"Earth's crust is very thin compared to Earth's size."},
+    {id:30, en:"Core", ar:"لب", ph:"/kɔːr/", fact:"Earth's core is hot iron the size of Mars!"},
+    {id:31, en:"Mars", ar:"المريخ", ph:"/mɑːz/", fact:"Mars is called the Red Planet because of its dust!"},
+    {id:32, en:"Jupiter", ar:"المشتري", ph:"/ˈdʒuː.pɪ.tər/", fact:"Jupiter is the biggest planet and has 95 moons!"},
+    {id:33, en:"Saturn", ar:"زحل", ph:"/ˈsæt.ɜːn/", fact:"Saturn is famous for its beautiful rings made of ice!"},
+    {id:34, en:"Venus", ar:"الزهرة", ph:"/ˈviː.nəs/", fact:"Venus is the hottest planet even though it's not closest to the Sun!"},
+    {id:35, en:"Mercury", ar:"عطارد", ph:"/ˈmɜː.kjʊ.ri/", fact:"Mercury is the closest planet to the Sun and the smallest!"},
+    {id:36, en:"Neptune", ar:"نبتون", ph:"/ˈnep.tjuːn/", fact:"Neptune is blue and has the fastest winds in the solar system!"},
+    {id:37, en:"Uranus", ar:"أورانوس", ph:"/ˈjʊə.rə.nəs/", fact:"Uranus rotates tilted on its side!"},
+    {id:38, en:"Pluto", ar:"بلوتو", ph:"/ˈpluː.təʊ/", fact:"Pluto was a planet then became a dwarf planet!"},
+    {id:39, en:"Black Hole", ar:"ثقب أسود", ph:"/blæk həʊl/", fact:"A black hole's gravity is so strong that even light can't escape!"},
+    {id:40, en:"Nebula", ar:"سديم", ph:"/ˈneb.jʊ.lə/", fact:"Nebulae are nurseries where new stars are born!"},
+    {id:41, en:"Supernova", ar:"مستعر أعظم", ph:"/ˌsuː.pəˈnəʊ.və/", fact:"A supernova is a huge explosion of a dying star!"},
+    {id:42, en:"Constellation", ar:"كوكبة", ph:"/ˌkɒn.stəˈleɪ.ʃən/", fact:"Constellations are star patterns humans have seen since ancient times."},
+    {id:43, en:"Equator", ar:"خط الاستواء", ph:"/ɪˈkweɪ.tər/", fact:"The equator divides Earth into two equal halves."},
+    {id:44, en:"Season", ar:"فصل", ph:"/ˈsiː.zən/", fact:"The four seasons are caused by Earth's tilt!"},
+    {id:45, en:"Tides", ar:"مد وجزر", ph:"/taɪdz/", fact:"Tides happen because of the Moon's gravity!"},
+    {id:46, en:"Magma", ar:"صهارة", ph:"/ˈmæɡ.mə/", fact:"Magma is melted rock beneath Earth's crust."},
+    {id:47, en:"Tsunami Wave", ar:"موجة تسونامي", ph:"/tsuːˈnɑː.mi weɪv/", fact:"Tsunami waves can reach 30 meters high!"},
+    {id:48, en:"Space Station", ar:"محطة فضاء", ph:"/speɪs ˈsteɪ.ʃən/", fact:"The International Space Station is home to astronauts!"},
+    {id:49, en:"Rover", ar:"مركبة استكشاف", ph:"/ˈrəʊ.vər/", fact:"Rovers explore the surface of Mars!"},
+    {id:50, en:"Big Bang", ar:"الانفجار العظيم", ph:"/bɪɡ bæŋ/", fact:"The Big Bang was the beginning of the universe 13.8 billion years ago!"}
+  ],
+  "human-body": [
+    {id:1, en:"Brain", ar:"دماغ", ph:"/breɪn/", fact:"The brain contains 86 billion nerve cells!"},
+    {id:2, en:"Heart", ar:"قلب", ph:"/hɑːt/", fact:"The heart beats about 100,000 times a day!"},
+    {id:3, en:"Lung", ar:"رئة", ph:"/lʌŋ/", fact:"The lungs breathe about 20,000 times a day!"},
+    {id:4, en:"Stomach", ar:"معدة", ph:"/ˈstʌm.ək/", fact:"The stomach has strong acids to digest food."},
+    {id:5, en:"Liver", ar:"كبد", ph:"/ˈlɪv.ər/", fact:"The liver is the largest internal organ and does over 500 jobs!"},
+    {id:6, en:"Kidney", ar:"كلية", ph:"/ˈkɪd.ni/", fact:"The kidneys clean the blood from toxins every day."},
+    {id:7, en:"Bone", ar:"عظم", ph:"/bəʊn/", fact:"The human body has 206 bones!"},
+    {id:8, en:"Muscle", ar:"عضلة", ph:"/ˈmʌs.əl/", fact:"The human body has over 600 muscles!"},
+    {id:9, en:"Blood", ar:"دم", ph:"/blʌd/", fact:"Blood carries oxygen to all body cells."},
+    {id:10, en:"Skin", ar:"جلد", ph:"/skɪn/", fact:"Skin is the largest organ in the human body!"},
+    {id:11, en:"Eye", ar:"عين", ph:"/aɪ/", fact:"The eye can distinguish 10 million different colors!"},
+    {id:12, en:"Ear", ar:"أذن", ph:"/ɪər/", fact:"The inner ear also controls balance!"},
+    {id:13, en:"Nose", ar:"أنف", ph:"/nəʊz/", fact:"Humans can distinguish a trillion different smells!"},
+    {id:14, en:"Tongue", ar:"لسان", ph:"/tʌŋ/", fact:"The tongue has thousands of taste buds."},
+    {id:15, en:"Tooth", ar:"سن", ph:"/tuːθ/", fact:"Humans have two sets of teeth: baby and permanent."},
+    {id:16, en:"Hair", ar:"شعر", ph:"/heər/", fact:"Hair grows about 1 cm per month!"},
+    {id:17, en:"Nail", ar:"ظفر", ph:"/neɪl/", fact:"Nails grow faster on fingers than toes!"},
+    {id:18, en:"Skeleton", ar:"هيكل عظمي", ph:"/ˈskel.ɪ.tən/", fact:"The skeleton supports the body and protects organs."},
+    {id:19, en:"Rib", ar:"ضلع", ph:"/rɪb/", fact:"The rib cage protects the heart and lungs!"},
+    {id:20, en:"Skull", ar:"جمجمة", ph:"/skʌl/", fact:"The skull protects the brain from injuries."},
+    {id:21, en:"Spine", ar:"عمود فقري", ph:"/spaɪn/", fact:"The spine has 33 vertebrae!"},
+    {id:22, en:"Vein", ar:"وريد", ph:"/veɪn/", fact:"Veins carry blood from the body to the heart."},
+    {id:23, en:"Artery", ar:"شريان", ph:"/ˈɑː.tər.i/", fact:"Arteries carry blood from the heart to the rest of the body."},
+    {id:24, en:"Nerve", ar:"عصب", ph:"/nɜːv/", fact:"Nerves send messages at 400 km/h!"},
+    {id:25, en:"Cell", ar:"خلية", ph:"/sel/", fact:"The human body has 37 trillion cells!"},
+    {id:26, en:"DNA", ar:"الحمض النووي", ph:"/ˌdiː.enˈeɪ/", fact:"DNA is the unique genetic code of every human!"},
+    {id:27, en:"Hormone", ar:"هرمون", ph:"/ˈhɔː.məʊn/", fact:"Hormones are chemical messages that travel in the blood."},
+    {id:28, en:"Enzyme", ar:"إنزيم", ph:"/ˈen.zaɪm/", fact:"Enzymes help digest food quickly."},
+    {id:29, en:"Immune System", ar:"الجهاز المناعي", ph:"/ɪˈmjuːn ˈsɪs.təm/", fact:"Your immune system fights millions of germs every day!"},
+    {id:30, en:"White Blood Cell", ar:"كرية دم بيضاء", ph:"/waɪt blʌd sel/", fact:"White blood cells are soldiers that protect you from disease!"},
+    {id:31, en:"Red Blood Cell", ar:"كرية دم حمراء", ph:"/red blʌd sel/", fact:"Red blood cells carry oxygen to all cells."},
+    {id:32, en:"Platelet", ar:"صفائح دموية", ph:"/ˈpleɪt.lət/", fact:"Platelets help blood clot."},
+    {id:33, en:"Pancreas", ar:"بنكرياس", ph:"/pæŋˈkri.əs/", fact:"The pancreas makes digestive enzymes and insulin."},
+    {id:34, en:"Spleen", ar:"طحال", ph:"/spliːn/", fact:"The spleen filters blood and stores red blood cells."},
+    {id:35, en:"Intestine", ar:"أمعاء", ph:"/ɪnˈtes.tɪn/", fact:"The intestines are about 7 meters long!"},
+    {id:36, en:"Esophagus", ar:"مريء", ph:"/ɪˈsɒf.ə.ɡəs/", fact:"Food takes 7 seconds to travel from the esophagus to the stomach!"},
+    {id:37, en:"Trachea", ar:"قصبة هوائية", ph:"/trəˈkiː.ə/", fact:"The trachea carries air to the lungs."},
+    {id:38, en:"Diaphragm", ar:"حجاب حاجز", ph:"/ˈdaɪ.ə.fræm/", fact:"The diaphragm is a muscle that helps you breathe."},
+    {id:39, en:"Retina", ar:"شبكية", ph:"/ˈret.ɪ.nə/", fact:"The retina has 120 million light-sensitive cells!"},
+    {id:40, en:"Pupil", ar:"حدقة", ph:"/ˈpjuː.pəl/", fact:"The pupil gets bigger in the dark and smaller in light."},
+    {id:41, en:"Cochlea", ar:"قوقعة", ph:"/ˈkɒk.li.ə/", fact:"The cochlea in the ear turns sound into nerve signals."},
+    {id:42, en:"Cartilage", ar:"غضروف", ph:"/ˈkɑː.tɪ.lɪdʒ/", fact:"Cartilage prevents bones from rubbing against each other."},
+    {id:43, en:"Tendon", ar:"وتر", ph:"/ˈten.dən/", fact:"Tendons connect muscles to bones."},
+    {id:44, en:"Joint", ar:"مفصل", ph:"/dʒɔɪnt/", fact:"There are 360 joints in the human body!"},
+    {id:45, en:"Chromosome", ar:"كروموسوم", ph:"/ˈkrəʊ.mə.səʊm/", fact:"Humans have 46 chromosomes in every cell."},
+    {id:46, en:"Neuron", ar:"خلية عصبية", ph:"/ˈnjʊə.rɒn/", fact:"Neurons can send 1000 signals per second!"},
+    {id:47, en:"Synapse", ar:"مشبك عصبي", ph:"/ˈsɪn.æps/", fact:"Synapses are the bridges of communication between cells."},
+    {id:48, en:"Antibody", ar:"جسم مضاد", ph:"/ˈæn.ti.bɒd.i/", fact:"Antibodies recognize germs and destroy them."},
+    {id:49, en:"Reflex", ar:"رد فعل", ph:"/ˈriː.fleks/", fact:"A reflex happens before the signal reaches the brain!"},
+    {id:50, en:"Metabolism", ar:"عملية الأيض", ph:"/məˈtæb.ə.lɪz.əm/", fact:"Metabolism is the sum of all chemical reactions in the body."}
+  ]
+};
+
+const worldConfig = {
+  plants: { title: "Plants World", subtitle: "Plants World", color: "#22c55e", bgColor: "#f0fdf4", borderColor: "#bbf7d0", icon: "🌿" },
+  animals: { title: "Animals World", subtitle: "Animals World", color: "#f97316", bgColor: "#fff7ed", borderColor: "#fed7aa", icon: "🦁" },
+  "earth-space": { title: "Earth & Space", subtitle: "Earth & Space World", color: "#3b82f6", bgColor: "#eff6ff", borderColor: "#bfdbfe", icon: "🌍" },
+  "human-body": { title: "Human Body", subtitle: "Human Body World", color: "#ef4444", bgColor: "#fef2f2", borderColor: "#fecaca", icon: "❤️" }
+};
+
+let currentWorld = null;
+let currentIndex = 0;
+let stars = parseInt(localStorage.getItem('mhs_stars') || '0');
+let completed = JSON.parse(localStorage.getItem('mhs_completed') || '{}');
+let showTranslation = false;
+
+function updateStars() {
+  document.getElementById('starCount').textContent = stars;
+}
+
+function saveProgress() {
+  localStorage.setItem('mhs_stars', stars);
+  localStorage.setItem('mhs_completed', JSON.stringify(completed));
+}
+
+function showHome() {
+  document.getElementById('homePage').style.display = 'block';
+  document.getElementById('vocabPage').classList.remove('active');
+  document.getElementById('mainFooter').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function scrollToWorlds() {
+  document.getElementById('worlds').scrollIntoView({ behavior: 'smooth' });
+}
+
+function showWorld(worldId) {
+  currentWorld = worldId;
+  currentIndex = 0;
+  showTranslation = false;
+  const config = worldConfig[worldId];
+
+  document.getElementById('homePage').style.display = 'none';
+  document.getElementById('vocabPage').classList.add('active');
+  document.getElementById('mainFooter').style.display = 'none';
+
+  document.getElementById('worldTitle').textContent = config.title;
+  document.getElementById('worldSubtitle').textContent = config.subtitle;
+
+  const card = document.getElementById('wordCard');
+  card.style.borderColor = config.borderColor;
+
+  document.getElementById('progressFill').style.background = config.color;
+
+  renderDots();
+  renderWord();
+  window.scrollTo(0, 0);
+}
+
+function renderWord() {
+  const word = vocabData[currentWorld][currentIndex];
+  const config = worldConfig[currentWorld];
+  const isCompleted = completed[currentWorld] && completed[currentWorld].includes(currentIndex);
+
+  document.getElementById('wordEnglish').textContent = word.en;
+  document.getElementById('wordPhonetic').textContent = word.ph;
+  document.getElementById('arabicMeaning').textContent = word.ar;
+  document.getElementById('arabicMeaning').style.background = config.bgColor;
+  document.getElementById('arabicMeaning').style.color = config.color;
+
+  document.getElementById('wordStarred').style.display = isCompleted ? 'block' : 'none';
+
+  document.getElementById('translateBtn').style.background = config.color;
+
+  if (showTranslation) {
+    document.getElementById('translateSection').style.display = 'none';
+    document.getElementById('arabicSection').style.display = 'block';
+  } else {
+    document.getElementById('translateSection').style.display = 'block';
+    document.getElementById('arabicSection').style.display = 'none';
+  }
+
+  const total = vocabData[currentWorld].length;
+  document.getElementById('progressLabel').textContent = `Word ${currentIndex + 1} of ${total}`;
+  document.getElementById('progressPercent').textContent = `${Math.round((currentIndex + 1) / total * 100)}%`;
+  document.getElementById('progressFill').style.width = `${(currentIndex + 1) / total * 100}%`;
+
+  document.getElementById('prevBtn').disabled = currentIndex === 0;
+  document.getElementById('nextBtn').disabled = currentIndex === total - 1;
+
+  updateDots();
+}
+
+function toggleTranslation() {
+  showTranslation = !showTranslation;
+  renderWord();
+}
+
+function prevWord() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showTranslation = false;
+    renderWord();
+  }
+}
+
+function nextWord() {
+  if (currentIndex < vocabData[currentWorld].length - 1) {
+    currentIndex++;
+    showTranslation = false;
+    renderWord();
+  }
+}
+
+function renderDots() {
+  const total = vocabData[currentWorld].length;
+  let html = '';
+  for (let i = 0; i < total; i++) {
+    html += `<button class="dot" id="dot${i}" onclick="goToWord(${i})"></button>`;
+  }
+  document.getElementById('dotsRow').innerHTML = html;
+}
+
+function updateDots() {
+  const total = vocabData[currentWorld].length;
+  for (let i = 0; i < total; i++) {
+    const dot = document.getElementById(`dot${i}`);
+    dot.classList.remove('active', 'starred');
+    if (i === currentIndex) dot.classList.add('active');
+    else if (completed[currentWorld] && completed[currentWorld].includes(i)) dot.classList.add('starred');
+  }
+}
+
+function goToWord(index) {
+  currentIndex = index;
+  showTranslation = false;
+  renderWord();
+}
+
+function speakWord(type) {
+  const word = vocabData[currentWorld][currentIndex].en;
+  if (!window.speechSynthesis) {
+    alert('Sorry, your browser does not support speech.');
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.rate = type === 'slow' ? 0.5 : 1;
+  utterance.lang = type === 'british' ? 'en-GB' : 'en-US';
+  window.speechSynthesis.speak(utterance);
+}
+
+function showFact() {
+  const word = vocabData[currentWorld][currentIndex];
+  document.getElementById('factWord').textContent = word.en;
+  document.getElementById('factText').textContent = word.fact;
+  openModal('factModal');
+}
+
+let currentQuiz = null;
+
+function showQuiz() {
+  generateQuiz();
+  openModal('quizModal');
+}
+
+function generateQuiz() {
+  const word = vocabData[currentWorld][currentIndex];
+  const allWords = vocabData[currentWorld];
+  const correct = word.ar;
+  const distractors = [];
+  const used = new Set([currentIndex]);
+
+  while (distractors.length < 3 && used.size < allWords.length) {
+    const idx = Math.floor(Math.random() * allWords.length);
+    if (!used.has(idx)) {
+      used.add(idx);
+      distractors.push(allWords[idx].ar);
+    }
+  }
+
+  const options = [correct, ...distractors].sort(() => Math.random() - 0.5);
+  const correctIndex = options.indexOf(correct);
+
+  currentQuiz = { options, correctIndex };
+
+  document.getElementById('quizQuestion').textContent = `What is the meaning of "${word.en}"?`;
+
+  let html = '';
+  options.forEach((opt, i) => {
+    html += `<button class="quiz-option" id="quizOpt${i}" onclick="selectQuiz(${i})">${opt}</button>`;
+  });
+  document.getElementById('quizOptions').innerHTML = html;
+  document.getElementById('quizResult').innerHTML = '';
+  document.getElementById('retryBtn').style.display = 'none';
+}
+
+function selectQuiz(index) {
+  if (!currentQuiz) return;
+  const correct = index === currentQuiz.correctIndex;
+
+  currentQuiz.options.forEach((_, i) => {
+    const btn = document.getElementById(`quizOpt${i}`);
+    btn.disabled = true;
+    if (i === currentQuiz.correctIndex) btn.classList.add('correct');
+    else if (i === index && !correct) btn.classList.add('wrong');
+  });
+
+  const resultDiv = document.getElementById('quizResult');
+  if (correct) {
+    resultDiv.innerHTML = '<div class="quiz-result" style="background: #dcfce7; color: #166534;">⭐ Great job! You earned a star! ⭐</div>';
+    if (!completed[currentWorld]) completed[currentWorld] = [];
+    if (!completed[currentWorld].includes(currentIndex)) {
+      completed[currentWorld].push(currentIndex);
+      stars++;
+      updateStars();
+      saveProgress();
+      renderWord();
+    }
+  } else {
+    resultDiv.innerHTML = '<div class="quiz-result" style="background: #fee2e2; color: #991b1b;">💪 Try again!</div>';
+    document.getElementById('retryBtn').style.display = 'block';
+  }
+}
+
+function showGame() {
+  const descs = {
+    plants: "Help Adam assemble the plant parts! Drag each part to its correct place.",
+    animals: "Help Adam match the animals with their sounds! Click on the correct animal.",
+    "earth-space": "Help Adam arrange the planets! Place each planet in its correct orbit.",
+    "human-body": "Help Adam identify body organs! Click on the correct organ."
+  };
+  document.getElementById('gameDesc').textContent = descs[currentWorld] || "Let's play!";
+  openModal('gameModal');
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.classList.remove('active');
+  });
+});
+
+// Initialize
+updateStars();
+</script>
+</body>
+</html>
